@@ -13,13 +13,20 @@ class ResultsViewController: UIViewController {
     
     @IBOutlet weak var myTextView: UITextView!
     @IBOutlet weak var myImageView: UIImageView!
+    @IBOutlet weak var hudImageView: UIImageView!
     
     @IBAction func saveToDiskAction(_ sender: Any) {
         dataBase.append(scannedItem)
+        myTextView.alpha = 0.4
+        myImageView.alpha = 0.4
+        hudImageView.isHidden = false
+        hudImageView.alpha = 1.0
         let n: Int! = self.navigationController?.viewControllers.count
         let listVC = self.navigationController?.viewControllers[n-2] as! ListViewController
         listVC.myCollectionView.reloadData()
-        navigationController?.popViewController(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     
@@ -39,6 +46,7 @@ class ResultsViewController: UIViewController {
     }
     
     func setupUI() {
+        hudImageView.isHidden = true
         self.title = scannedItem.headline
         myTextView.text = scannedItem.content
         myImageView.image = scannedItem.image ?? image

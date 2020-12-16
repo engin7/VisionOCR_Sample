@@ -123,6 +123,14 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eSr-8X-Fga">
                                 <rect key="frame" x="20" y="584" width="388" height="308"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.rectangle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="B0x-Ge-DwP">
+                                <rect key="frame" x="174" y="424.66666666666669" width="80" height="77"/>
+                                <color key="tintColor" systemColor="systemGreenColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="AhJ-3s-SB4"/>
+                                    <constraint firstAttribute="height" constant="80" id="tpN-Jp-28l"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aZi-Bn-K4A"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -132,8 +140,10 @@
                             <constraint firstItem="aZi-Bn-K4A" firstAttribute="trailing" secondItem="V5t-RT-5F0" secondAttribute="trailing" constant="20" id="Irf-AB-Cij"/>
                             <constraint firstItem="eSr-8X-Fga" firstAttribute="leading" secondItem="aZi-Bn-K4A" secondAttribute="leading" constant="20" id="MoF-fb-65U"/>
                             <constraint firstItem="V5t-RT-5F0" firstAttribute="leading" secondItem="aZi-Bn-K4A" secondAttribute="leading" constant="20" id="Rte-9I-Y0m"/>
+                            <constraint firstItem="B0x-Ge-DwP" firstAttribute="centerY" secondItem="g4L-Sw-w1Q" secondAttribute="centerY" id="WhZ-TG-cw1"/>
                             <constraint firstItem="eSr-8X-Fga" firstAttribute="bottom" secondItem="aZi-Bn-K4A" secondAttribute="bottom" id="az5-W6-R41"/>
                             <constraint firstItem="eSr-8X-Fga" firstAttribute="top" secondItem="V5t-RT-5F0" secondAttribute="bottom" constant="8" symbolic="YES" id="huf-O3-QHy"/>
+                            <constraint firstItem="B0x-Ge-DwP" firstAttribute="centerX" secondItem="g4L-Sw-w1Q" secondAttribute="centerX" id="r70-UF-AJY"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="aEk-rf-d6s">
@@ -144,6 +154,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="hudImageView" destination="B0x-Ge-DwP" id="LS3-nu-qYS"/>
                         <outlet property="myImageView" destination="eSr-8X-Fga" id="43Z-My-7g8"/>
                         <outlet property="myTextView" destination="V5t-RT-5F0" id="kt4-cy-kg3"/>
                     </connections>
@@ -191,12 +202,16 @@
     </scenes>
     <resources>
         <image name="camera.on.rectangle.fill" catalog="system" width="128" height="96"/>
+        <image name="checkmark.rectangle.fill" catalog="system" width="128" height="93"/>
         <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

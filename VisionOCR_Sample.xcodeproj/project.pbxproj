@@ -16,6 +16,8 @@
 		28925E222589F68700CCCB18 /* ListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E212589F68700CCCB18 /* ListCollectionViewCell.swift */; };
 		28925E252589F97C00CCCB18 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E242589F97C00CCCB18 /* ResultsViewController.swift */; };
 		28925E282589FBF100CCCB18 /* ScannedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E272589FBF100CCCB18 /* ScannedItem.swift */; };
+		28925E33258A326100CCCB18 /* OCR sample-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 28925E31258A326100CCCB18 /* OCR sample-1.png */; };
+		28925E34258A326100CCCB18 /* OCR sample-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 28925E32258A326100CCCB18 /* OCR sample-2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		28925E212589F68700CCCB18 /* ListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCollectionViewCell.swift; sourceTree = "<group>"; };
 		28925E242589F97C00CCCB18 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		28925E272589FBF100CCCB18 /* ScannedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedItem.swift; sourceTree = "<group>"; };
+		28925E31258A326100CCCB18 /* OCR sample-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OCR sample-1.png"; sourceTree = "<group>"; };
+		28925E32258A326100CCCB18 /* OCR sample-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OCR sample-2.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,8 @@
 				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28925E0E2589F12700CCCB18 /* Main.storyboard */,
 				28925E112589F12900CCCB18 /* Assets.xcassets */,
+				28925E31258A326100CCCB18 /* OCR sample-1.png */,
+				28925E32258A326100CCCB18 /* OCR sample-2.png */,
 				28925E132589F12900CCCB18 /* LaunchScreen.storyboard */,
 				28925E162589F12900CCCB18 /* Info.plist */,
 			);
@@ -134,8 +140,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				28925E152589F12900CCCB18 /* LaunchScreen.storyboard in Resources */,
+				28925E34258A326100CCCB18 /* OCR sample-2.png in Resources */,
 				28925E122589F12900CCCB18 /* Assets.xcassets in Resources */,
 				28925E102589F12700CCCB18 /* Main.storyboard in Resources */,
+				28925E33258A326100CCCB18 /* OCR sample-1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
