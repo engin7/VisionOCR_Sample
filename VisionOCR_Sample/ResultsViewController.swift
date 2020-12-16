@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import Vision
 
 class ResultsViewController: UIViewController {
 
+    var image: UIImage?
+    var scannedItem: Scan?
+    var selectedIndex: IndexPath?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,4 +31,14 @@ class ResultsViewController: UIViewController {
     }
     */
 
+}
+
+// MARK: - RecognizedTextDataSource
+
+extension ResultsViewController: RecognizedTextDataSource {
+    func addRecognizedText(recognizedText: [VNRecognizedTextObservation]) {
+    // Create a full transcript to run analysis on.
+    let maximumCandidates = 1
+    
+    }
 }
