@@ -120,7 +120,7 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
             height = collectionView.frame.width/2 - 20
         } else {
             width  = collectionView.frame.width/3 - 50
-            height = collectionView.frame.width/4 - 70
+            height = collectionView.frame.width/3 - 90
         }
         return CGSize(width: width, height: height)
     }
