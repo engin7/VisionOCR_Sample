@@ -52,15 +52,15 @@ extension ResultsViewController: RecognizedTextDataSource {
             
            guard let candidate = observation.topCandidates(maximumCandidates).first else { continue }
            let text = candidate.string
-           allContent.append(text)
-    
-           if text.count >= 3 {
-               // Name is located generally on the top-left
+         
+           if scannedItem.headline == "Scanned Item" && text.count >= 3 {
+               // title is located generally on the top-left
                 scannedItem.headline = text
+           } else {
+               allContent.append(text)
            }
         }
         scannedItem.content = allContent.joined(separator:" ")
-        
 
     }
     
