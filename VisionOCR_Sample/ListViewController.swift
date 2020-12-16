@@ -26,7 +26,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
     var textRecognitionRequest = VNRecognizeTextRequest()
     let picker = UIImagePickerController()
     var resultsViewController: ResultsViewController?
-    var scannedItems:[Scan] = []
+    var scannedItems:[ScannedItem] = []
   
 
     override func viewDidLoad() {
@@ -112,13 +112,15 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
 extension ListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let height = CGFloat(128)
-        var width:CGFloat
+        let height: CGFloat
+        var width: CGFloat
         // two rows for ipad
         if collectionView.frame.size.width < 768 {
-            width  = collectionView.frame.width/2 - 10
+            width  = collectionView.frame.width/2 - 20
+            height = collectionView.frame.width/2
         } else {
-            width  = collectionView.frame.width/4 - 20
+            width  = collectionView.frame.width/3 - 50
+            height = collectionView.frame.width/4
         }
         return CGSize(width: width, height: height)
     }

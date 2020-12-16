@@ -10,26 +10,34 @@ import Vision
 
 class ResultsViewController: UIViewController {
 
-    var image: UIImage?
-    var scannedItem: Scan?
-    var selectedIndex: IndexPath?
     
+    @IBOutlet weak var myTextView: UITextView!
+    @IBOutlet weak var myImageView: UIImageView!
+    
+    
+    var image: UIImage?
+    var selectedIndex: IndexPath?
+    var scannedItem = ScannedItem(headline: nil, content: nil, image: nil)
+    var allContent: [String] = []
+     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
-    
+     
+    override func viewWillAppear(_: Bool) {
+            super.viewWillAppear(true)
+            setupUI()
 
-    /*
-    // MARK: - Navigation
+            //call your data populating/API calls from here
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
     }
-    */
+    
+    func setupUI() {
+        self.title = scannedItem.headline
+        myTextView.text = scannedItem.content
+        myImageView.image = scannedItem.image ?? image
+    }
 
 }
 
@@ -37,8 +45,23 @@ class ResultsViewController: UIViewController {
 
 extension ResultsViewController: RecognizedTextDataSource {
     func addRecognizedText(recognizedText: [VNRecognizedTextObservation]) {
-    // Create a full transcript to run analysis on.
-    let maximumCandidates = 1
+        // Create a full transcript to run analysis on.
+        let maximumCandidates = 1
+        
+        for observation in recognizedText  {
+            
+           guard let candidate = observation.topCandidates(maximumCandidates).first else { continue }
+           let text = candidate.string
+           allContent.append(text)
     
+           if text.count >= 3 {
+               // Name is located generally on the top-left
+                scannedItem.headline = text
+           }
+        }
+        scannedItem.content = allContent.joined(separator:" ")
+        
+
     }
+    
 }
