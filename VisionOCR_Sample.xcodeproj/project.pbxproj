@@ -18,6 +18,9 @@
 		28925E282589FBF100CCCB18 /* ScannedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E272589FBF100CCCB18 /* ScannedItem.swift */; };
 		28925E33258A326100CCCB18 /* OCR sample-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 28925E31258A326100CCCB18 /* OCR sample-1.png */; };
 		28925E34258A326100CCCB18 /* OCR sample-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 28925E32258A326100CCCB18 /* OCR sample-2.png */; };
+		28FB7CE0258A507000D2842F /* a-sample-of-jim-s-restaurant.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 28FB7CDD258A507000D2842F /* a-sample-of-jim-s-restaurant.jpg */; };
+		28FB7CE1258A507000D2842F /* clubReciept.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 28FB7CDE258A507000D2842F /* clubReciept.jpg */; };
+		28FB7CE2258A507000D2842F /* sample Hotel .jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 28FB7CDF258A507000D2842F /* sample Hotel .jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,9 @@
 		28925E272589FBF100CCCB18 /* ScannedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedItem.swift; sourceTree = "<group>"; };
 		28925E31258A326100CCCB18 /* OCR sample-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OCR sample-1.png"; sourceTree = "<group>"; };
 		28925E32258A326100CCCB18 /* OCR sample-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OCR sample-2.png"; sourceTree = "<group>"; };
+		28FB7CDD258A507000D2842F /* a-sample-of-jim-s-restaurant.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "a-sample-of-jim-s-restaurant.jpg"; sourceTree = "<group>"; };
+		28FB7CDE258A507000D2842F /* clubReciept.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = clubReciept.jpg; sourceTree = "<group>"; };
+		28FB7CDF258A507000D2842F /* sample Hotel .jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sample Hotel .jpeg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,12 +80,23 @@
 				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28925E0E2589F12700CCCB18 /* Main.storyboard */,
 				28925E112589F12900CCCB18 /* Assets.xcassets */,
-				28925E31258A326100CCCB18 /* OCR sample-1.png */,
-				28925E32258A326100CCCB18 /* OCR sample-2.png */,
+				28FB7CE4258A507900D2842F /* SampleImages (import to photos library) */,
 				28925E132589F12900CCCB18 /* LaunchScreen.storyboard */,
 				28925E162589F12900CCCB18 /* Info.plist */,
 			);
 			path = VisionOCR_Sample;
+			sourceTree = "<group>";
+		};
+		28FB7CE4258A507900D2842F /* SampleImages (import to photos library) */ = {
+			isa = PBXGroup;
+			children = (
+				28925E31258A326100CCCB18 /* OCR sample-1.png */,
+				28925E32258A326100CCCB18 /* OCR sample-2.png */,
+				28FB7CDD258A507000D2842F /* a-sample-of-jim-s-restaurant.jpg */,
+				28FB7CDE258A507000D2842F /* clubReciept.jpg */,
+				28FB7CDF258A507000D2842F /* sample Hotel .jpeg */,
+			);
+			path = "SampleImages (import to photos library)";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,9 +156,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28FB7CE0258A507000D2842F /* a-sample-of-jim-s-restaurant.jpg in Resources */,
 				28925E152589F12900CCCB18 /* LaunchScreen.storyboard in Resources */,
 				28925E34258A326100CCCB18 /* OCR sample-2.png in Resources */,
 				28925E122589F12900CCCB18 /* Assets.xcassets in Resources */,
+				28FB7CE2258A507000D2842F /* sample Hotel .jpeg in Resources */,
+				28FB7CE1258A507000D2842F /* clubReciept.jpg in Resources */,
 				28925E102589F12700CCCB18 /* Main.storyboard in Resources */,
 				28925E33258A326100CCCB18 /* OCR sample-1.png in Resources */,
 			);

@@ -147,11 +147,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="aEk-rf-d6s">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="tray.and.arrow.down.fill" catalog="system" id="DaH-Wa-eRi">
-                            <connections>
-                                <action selector="saveToDiskAction:" destination="LZP-Di-pkA" id="AhF-1Z-sfA"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Item" image="tray.and.arrow.down.fill" catalog="system" id="DaH-Wa-eRi">
+                                <connections>
+                                    <action selector="saveToDiskAction:" destination="LZP-Di-pkA" id="AhF-1Z-sfA"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" image="doc.text" catalog="system" id="Wr7-tJ-AVR">
+                                <connections>
+                                    <action selector="createPdfAction:" destination="LZP-Di-pkA" id="dGw-nv-eHt"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="hudImageView" destination="B0x-Ge-DwP" id="LS3-nu-qYS"/>
@@ -203,6 +210,7 @@
     <resources>
         <image name="camera.on.rectangle.fill" catalog="system" width="128" height="96"/>
         <image name="checkmark.rectangle.fill" catalog="system" width="128" height="93"/>
+        <image name="doc.text" catalog="system" width="115" height="128"/>
         <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
