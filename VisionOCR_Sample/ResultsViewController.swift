@@ -14,6 +14,14 @@ class ResultsViewController: UIViewController {
     @IBOutlet weak var myTextView: UITextView!
     @IBOutlet weak var myImageView: UIImageView!
     
+    @IBAction func saveToDiskAction(_ sender: Any) {
+        dataBase.append(scannedItem)
+        let n: Int! = self.navigationController?.viewControllers.count
+        let listVC = self.navigationController?.viewControllers[n-2] as! ListViewController
+        listVC.myCollectionView.reloadData()
+        navigationController?.popViewController(animated: true)
+    }
+    
     
     var image: UIImage?
     var selectedIndex: IndexPath?
@@ -28,9 +36,6 @@ class ResultsViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
             super.viewWillAppear(true)
             setupUI()
-
-            //call your data populating/API calls from here
-
     }
     
     func setupUI() {
@@ -61,7 +66,7 @@ extension ResultsViewController: RecognizedTextDataSource {
            }
         }
         scannedItem.content = allContent.joined(separator:" ")
-
+        scannedItem.image = image
     }
     
 }

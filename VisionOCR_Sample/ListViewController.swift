@@ -117,10 +117,10 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
         // two rows for ipad
         if collectionView.frame.size.width < 768 {
             width  = collectionView.frame.width/2 - 20
-            height = collectionView.frame.width/2
+            height = collectionView.frame.width/2 - 20
         } else {
             width  = collectionView.frame.width/3 - 50
-            height = collectionView.frame.width/4
+            height = collectionView.frame.width/4 - 70
         }
         return CGSize(width: width, height: height)
     }

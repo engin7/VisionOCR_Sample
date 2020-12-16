@@ -40,6 +40,9 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kV-pX-Tt0">
                                                     <rect key="frame" x="8" y="221" width="134" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="zOe-kd-KKh"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -133,7 +136,13 @@
                             <constraint firstItem="eSr-8X-Fga" firstAttribute="top" secondItem="V5t-RT-5F0" secondAttribute="bottom" constant="8" symbolic="YES" id="huf-O3-QHy"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="aEk-rf-d6s"/>
+                    <navigationItem key="navigationItem" id="aEk-rf-d6s">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="tray.and.arrow.down.fill" catalog="system" id="DaH-Wa-eRi">
+                            <connections>
+                                <action selector="saveToDiskAction:" destination="LZP-Di-pkA" id="AhF-1Z-sfA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="myImageView" destination="eSr-8X-Fga" id="43Z-My-7g8"/>
                         <outlet property="myTextView" destination="V5t-RT-5F0" id="kt4-cy-kg3"/>
@@ -182,6 +191,7 @@
     </scenes>
     <resources>
         <image name="camera.on.rectangle.fill" catalog="system" width="128" height="96"/>
+        <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

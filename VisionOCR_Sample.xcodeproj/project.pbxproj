@@ -64,10 +64,10 @@
 			children = (
 				28925E082589F12700CCCB18 /* AppDelegate.swift */,
 				28925E0A2589F12700CCCB18 /* SceneDelegate.swift */,
-				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28925E272589FBF100CCCB18 /* ScannedItem.swift */,
 				28925E0C2589F12700CCCB18 /* ListViewController.swift */,
 				28925E212589F68700CCCB18 /* ListCollectionViewCell.swift */,
+				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28925E0E2589F12700CCCB18 /* Main.storyboard */,
 				28925E112589F12900CCCB18 /* Assets.xcassets */,
 				28925E132589F12900CCCB18 /* LaunchScreen.storyboard */,
