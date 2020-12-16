@@ -7,6 +7,8 @@
 
 import UIKit
 
+var dataBase = AllScans.shared.allScans
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
