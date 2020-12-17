@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		28031AAD258B34E300CDF18C /* PDFCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031AAC258B34E300CDF18C /* PDFCreator.swift */; };
 		28031AB0258B3CEE00CDF18C /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */; };
+		28031ABB258B816F00CDF18C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031ABA258B816F00CDF18C /* CameraViewController.swift */; };
 		28925E092589F12700CCCB18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E082589F12700CCCB18 /* AppDelegate.swift */; };
 		28925E0B2589F12700CCCB18 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E0A2589F12700CCCB18 /* SceneDelegate.swift */; };
 		28925E0D2589F12700CCCB18 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E0C2589F12700CCCB18 /* ListViewController.swift */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		28031AAC258B34E300CDF18C /* PDFCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCreator.swift; sourceTree = "<group>"; };
 		28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		28031ABA258B816F00CDF18C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		28925E052589F12700CCCB18 /* VisionOCR_Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisionOCR_Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28925E082589F12700CCCB18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28925E0A2589F12700CCCB18 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */,
 				28031AAC258B34E300CDF18C /* PDFCreator.swift */,
+				28031ABA258B816F00CDF18C /* CameraViewController.swift */,
 				28925E0E2589F12700CCCB18 /* Main.storyboard */,
 				28925E112589F12900CCCB18 /* Assets.xcassets */,
 				28FB7CE4258A507900D2842F /* SampleImages (import to photos library) */,
@@ -188,6 +191,7 @@
 				28925E252589F97C00CCCB18 /* ResultsViewController.swift in Sources */,
 				28925E0B2589F12700CCCB18 /* SceneDelegate.swift in Sources */,
 				28031AB0258B3CEE00CDF18C /* PreviewViewController.swift in Sources */,
+				28031ABB258B816F00CDF18C /* CameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
