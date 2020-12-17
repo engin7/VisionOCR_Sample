@@ -13,6 +13,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
+    @IBOutlet weak var cameraModeLabel: UILabel!
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
