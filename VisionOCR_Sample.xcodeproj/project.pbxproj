@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28031AAD258B34E300CDF18C /* PDFCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031AAC258B34E300CDF18C /* PDFCreator.swift */; };
 		28925E092589F12700CCCB18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E082589F12700CCCB18 /* AppDelegate.swift */; };
 		28925E0B2589F12700CCCB18 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E0A2589F12700CCCB18 /* SceneDelegate.swift */; };
 		28925E0D2589F12700CCCB18 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28925E0C2589F12700CCCB18 /* ListViewController.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28031AAC258B34E300CDF18C /* PDFCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCreator.swift; sourceTree = "<group>"; };
 		28925E052589F12700CCCB18 /* VisionOCR_Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisionOCR_Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28925E082589F12700CCCB18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28925E0A2589F12700CCCB18 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 			children = (
 				28925E082589F12700CCCB18 /* AppDelegate.swift */,
 				28925E0A2589F12700CCCB18 /* SceneDelegate.swift */,
+				28031AAC258B34E300CDF18C /* PDFCreator.swift */,
 				28925E272589FBF100CCCB18 /* ScannedItem.swift */,
 				28925E0C2589F12700CCCB18 /* ListViewController.swift */,
 				28925E212589F68700CCCB18 /* ListCollectionViewCell.swift */,
@@ -177,6 +180,7 @@
 				28925E0D2589F12700CCCB18 /* ListViewController.swift in Sources */,
 				28925E092589F12700CCCB18 /* AppDelegate.swift in Sources */,
 				28925E282589FBF100CCCB18 /* ScannedItem.swift in Sources */,
+				28031AAD258B34E300CDF18C /* PDFCreator.swift in Sources */,
 				28925E222589F68700CCCB18 /* ListCollectionViewCell.swift in Sources */,
 				28925E252589F97C00CCCB18 /* ResultsViewController.swift in Sources */,
 				28925E0B2589F12700CCCB18 /* SceneDelegate.swift in Sources */,
