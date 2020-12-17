@@ -125,6 +125,7 @@
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.rectangle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="B0x-Ge-DwP">
                                 <rect key="frame" x="174" y="424.66666666666669" width="80" height="77"/>
+                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                 <color key="tintColor" systemColor="systemGreenColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="AhJ-3s-SB4"/>
@@ -155,7 +156,7 @@
                             </barButtonItem>
                             <barButtonItem title="Item" image="doc.text" catalog="system" id="Wr7-tJ-AVR">
                                 <connections>
-                                    <action selector="createPdfAction:" destination="LZP-Di-pkA" id="dGw-nv-eHt"/>
+                                    <segue destination="RMG-gX-ljq" kind="show" identifier="previewSegue" id="0el-tK-jdV"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -169,6 +170,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zhh-Zd-HIf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3337.8504672897193" y="134.77321814254861"/>
+        </scene>
+        <!--Preview View Controller-->
+        <scene sceneID="s2R-1M-hTQ">
+            <objects>
+                <viewController id="RMG-gX-ljq" customClass="PreviewViewController" customModule="VisionOCR_Sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8Fx-By-1bp">
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeU-g4-rdn" customClass="PDFView">
+                                <rect key="frame" x="20" y="88" width="388" height="804"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6ex-GB-ZVN"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ZeU-g4-rdn" firstAttribute="top" secondItem="6ex-GB-ZVN" secondAttribute="top" id="0gl-no-Ljk"/>
+                            <constraint firstItem="ZeU-g4-rdn" firstAttribute="leading" secondItem="6ex-GB-ZVN" secondAttribute="leading" constant="20" id="9E3-AT-TP4"/>
+                            <constraint firstItem="6ex-GB-ZVN" firstAttribute="trailing" secondItem="ZeU-g4-rdn" secondAttribute="trailing" constant="20" id="eSf-6o-uRg"/>
+                            <constraint firstItem="6ex-GB-ZVN" firstAttribute="bottom" secondItem="ZeU-g4-rdn" secondAttribute="bottom" id="xgC-Us-Nnk"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="p6z-h4-OAa"/>
+                    <connections>
+                        <outlet property="pdfView" destination="ZeU-g4-rdn" id="U81-PR-Sqy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TzI-dR-Rh2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4234" y="135"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="VQf-FP-WSN">
@@ -214,6 +246,9 @@
         <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

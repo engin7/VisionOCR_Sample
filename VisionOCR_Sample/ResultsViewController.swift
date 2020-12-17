@@ -14,11 +14,7 @@ class ResultsViewController: UIViewController {
     @IBOutlet weak var myTextView: UITextView!
     @IBOutlet weak var myImageView: UIImageView!
     @IBOutlet weak var hudImageView: UIImageView!
-    
-    @IBAction func createPdfAction(_ sender: Any) {
-        
-    }
-    
+     
     @IBAction func saveToDiskAction(_ sender: Any) {
         save()
     }
@@ -59,10 +55,24 @@ class ResultsViewController: UIViewController {
         }
     }
     
-    func createPdf() {
-        
-       // study https://www.raywenderlich.com/4023941-creating-a-pdf-in-swift-with-pdfkit
-        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      
+      guard
+        segue.identifier == "previewSegue",
+        let vc = segue.destination as? PreviewViewController,
+        let title = self.title,
+        let body = myTextView.text,
+        let image = myImageView.image
+        else {
+          return
+      }
+
+      let pdfCreator = PDFCreator(
+        title: title,
+        body: body,
+        image: image
+      )
+      vc.documentData = pdfCreator.createPDF()
     }
     
     

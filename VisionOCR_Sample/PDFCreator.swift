@@ -14,7 +14,7 @@ class PDFCreator: NSObject {
     let body: String
     let image: UIImage
     
-    init(title: String, body: String, image: UIImage, contact: String) {
+    init(title: String, body: String, image: UIImage) {
       self.title = title
       self.body = body
       self.image = image
@@ -57,7 +57,7 @@ class PDFCreator: NSObject {
     
     func addTitle(pageRect: CGRect) -> CGFloat {
       //  create instance of System font
-      let titleFont = UIFont.systemFont(ofSize: 18.0, weight: .bold)
+      let titleFont = UIFont.systemFont(ofSize: 24.0, weight: .bold)
       let titleAttributes: [NSAttributedString.Key: Any] =
         [NSAttributedString.Key.font: titleFont]
       //  you create NSAttributedString containing the text of the title in the chosen font.
@@ -83,7 +83,7 @@ class PDFCreator: NSObject {
     //MARK: - Adding BodyText (NSParagraphStyle)
     
     func addBodyText(pageRect: CGRect, textTop: CGFloat) -> CGFloat {
-      let textFont = UIFont.systemFont(ofSize: 12.0, weight: .regular)
+      let textFont = UIFont.systemFont(ofSize: 20.0, weight: .regular)
       // Natural alignment sets the alignment based on the localization of the app.
       let paragraphStyle = NSMutableParagraphStyle()
       paragraphStyle.alignment = .natural
@@ -97,12 +97,12 @@ class PDFCreator: NSObject {
         string: body,
         attributes: textAttributes
       )
-      //  offsets 10 points from the left and sets the top at the passed value. The width is set to the width of the page minus a margin of 10 points on each side. The height is the distance from the top to 1/5 of the page height from the bottom.
+      //  offsets 10 points from the left and sets the top at the passed value. The width is set to the width of the page minus a margin of 10 points on each side. The height is the distance from the top to  multiplier of the page height from the bottom.
       let textRect = CGRect(
         x: 10,
         y: textTop,
         width: pageRect.width - 20,
-        height: pageRect.height - textTop - pageRect.height / 5.0
+        height: pageRect.height - textTop - pageRect.height * 0.50 // adjust multiplier
       )
       attributedText.draw(in: textRect)
         return textRect.origin.y + textRect.size.height
