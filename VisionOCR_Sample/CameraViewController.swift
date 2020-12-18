@@ -13,17 +13,53 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
-    @IBOutlet weak var cameraModeLabel: UILabel!
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+        switch  selectedFlashMode {
+        case .on:
+            settings.flashMode = .on
+        case .off:
+            settings.flashMode = .off
+        default:
+            settings.flashMode = .auto
+        }
         stillImageOutput.capturePhoto(with: settings, delegate: self)
+     }
+     
+    @IBAction func flashButtonPressed(_ sender: UIButton) {
+        switch  selectedFlashMode {
+        case .on:
+            selectedFlashMode = .off
+            sender.setImage(UIImage(systemName: "bolt.slash")!, for: UIControl.State.normal)
+        case .off:
+            selectedFlashMode = .auto
+            sender.setImage(UIImage(systemName: "bolt.badge.a")!, for: UIControl.State.normal)
+        default:
+            selectedFlashMode = .on
+            sender.setImage(UIImage(systemName: "bolt")!, for: UIControl.State.normal)
+        }
+       
+    }
+    
+    @IBAction func closeButtonPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
      
-    var captureSession: AVCaptureSession!
-    var stillImageOutput: AVCapturePhotoOutput!
-    var videoPreviewLayer: AVCaptureVideoPreviewLayer!
-     
+    private enum FlashPhotoMode  {
+        case on
+        case off
+        case auto
+    }
+    
+    private var selectedFlashMode = FlashPhotoMode.auto
+    
+    
+    private var captureSession: AVCaptureSession!
+    private var stillImageOutput: AVCapturePhotoOutput!
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer!
+    private var flashMode: AVCaptureDevice.FlashMode = .auto
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -66,7 +102,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // display what the camera sees on the screen in our UIView
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         
-        videoPreviewLayer.videoGravity = .resizeAspect
+        videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = .portrait
         previewView.layer.addSublayer(videoPreviewLayer)
         
@@ -80,8 +116,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         
     }
-    
-    
+   
     // The AVCapturePhotoOutput will deliver the captured photo to the assigned delegate which is our current ViewController by a delegate method called photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?). The photo is delivered to us as an AVCapturePhoto which is easy to transform into Data/NSData and than into UIImage.
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -90,8 +125,26 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         let image = UIImage(data: imageData)
         captureImageView.image = image
     }
-    
-    
-    
+     
+}
 
+
+extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    static let collectionViewReuseIdentifier = "Cell"
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+            return 4 // will change
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListViewController.collectionViewReuseIdentifier, for: indexPath) as! CameraCollectionViewCell
+        
+        cell.cameraModesLabel.text = "Scan Mode"
+        return cell
+    }
+    
+    
+    
 }

@@ -9,6 +9,18 @@ import UIKit
 
 class CameraCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var cameraModesLabel: UILabel!
+    
+    override func awakeFromNib() {
+            super.awakeFromNib()
+        }
+        
+        override func prepareForReuse() {
+            super.prepareForReuse()
+            cameraModesLabel.text = ""
+            
+        }
+    
     
     
 }
