@@ -27,7 +27,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
     let picker = UIImagePickerController()
     var resultsViewController: ResultsViewController?
     var scannedItems:[ScannedItem] = []
-  
+    var lastFlashMode = UIImage(systemName: "bolt.badge.a")!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +42,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
 //        let customWords = ["on","off"]
 //        textRecognitionRequest.customWords = customWords
     }
+  
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataBase.count

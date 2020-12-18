@@ -8,11 +8,16 @@
 import UIKit
 import AVFoundation
 
+
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+
+    private static let userDefaultsIdentifier = "flash"
+    private static let collectionViewReuseIdentifier = "Cell"
 
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
+    @IBOutlet weak var flashButton: UIButton!
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -43,26 +48,26 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     @IBAction func closeButtonPressed(_ sender: Any) {
+        defaults.set(selectedFlashMode.rawValue, forKey: CameraViewController.userDefaultsIdentifier)
         dismiss(animated: true, completion: nil)
     }
      
-    private enum FlashPhotoMode  {
-        case on
-        case off
-        case auto
+
+    private enum FlashPhotoMode: Int {
+        case auto = 0,on,off
     }
-    
+ 
     private var selectedFlashMode = FlashPhotoMode.auto
-    
-    
     private var captureSession: AVCaptureSession!
     private var stillImageOutput: AVCapturePhotoOutput!
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     private var flashMode: AVCaptureDevice.FlashMode = .auto
-
+    private var defaults = UserDefaults.standard
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        setupFlash()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -117,6 +122,26 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
     }
    
+    func setupFlash() {
+        var image: UIImage
+        let flashHashValue = defaults.integer(forKey: CameraViewController.userDefaultsIdentifier)
+        let chosenFlash = FlashPhotoMode(rawValue: flashHashValue) ?? FlashPhotoMode.auto
+        
+        switch  chosenFlash {
+        case .on:
+            image = UIImage(systemName: "bolt")!
+            selectedFlashMode = .on
+        case .off:
+            image = UIImage(systemName: "bolt.slash")!
+            selectedFlashMode = .off
+        default:
+            image = UIImage(systemName: "bolt.badge.a")!
+            selectedFlashMode = .auto
+        }
+        flashButton.setImage(image, for: UIControl.State.normal)
+    }
+
+    
     // The AVCapturePhotoOutput will deliver the captured photo to the assigned delegate which is our current ViewController by a delegate method called photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?). The photo is delivered to us as an AVCapturePhoto which is easy to transform into Data/NSData and than into UIImage.
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -130,16 +155,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
 
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    
-    static let collectionViewReuseIdentifier = "Cell"
-
+     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
             return 4 // will change
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListViewController.collectionViewReuseIdentifier, for: indexPath) as! CameraCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CameraViewController.collectionViewReuseIdentifier, for: indexPath) as! CameraCollectionViewCell
         
         cell.cameraModesLabel.text = "Scan Mode"
         return cell
