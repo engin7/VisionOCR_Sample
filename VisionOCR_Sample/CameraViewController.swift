@@ -7,17 +7,25 @@
 
 import UIKit
 import AVFoundation
-
+import Vision
 
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     private static let userDefaultsIdentifier = "flash"
     private static let collectionViewReuseIdentifier = "Cell"
 
+    
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
     @IBOutlet weak var flashButton: UIButton!
+    private var resultsViewController: ResultsViewController?
+    
+    var maskLayer = CAShapeLayer()
+    // Device orientation. Updated whenever the orientation changes
+    var currentOrientation = UIDeviceOrientation.portrait
+    
+    
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -64,6 +72,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private var flashMode: AVCaptureDevice.FlashMode = .auto
     private var defaults = UserDefaults.standard
         
+    // MARK: - Coordinate transforms
+    var bufferAspectRatio: Double!
+    // Transform from UI orientation to buffer orientation.
+    var uiRotationTransform = CGAffineTransform.identity
+    // Transform bottom-left coordinates to top-left.
+    var bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+    // Transform coordinates in ROI to global coordinates (still normalized).
+    var roiToGlobalTransform = CGAffineTransform.identity
+    
+    // Vision -> AVF coordinate transform.
+    var visionToAVFTransform = CGAffineTransform.identity
+    
+    // MARK: - View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -151,6 +173,46 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         captureImageView.image = image
     }
      
+    // MARK: - Bounding box drawing
+    
+    // Draw a box on screen. Must be called from main queue.
+    var boxLayer = [CAShapeLayer]()
+    func draw(rect: CGRect, color: CGColor) {
+        let layer = CAShapeLayer()
+        layer.opacity = 0.5
+        layer.borderColor = color
+        layer.borderWidth = 1
+        layer.frame = rect
+        boxLayer.append(layer)
+        videoPreviewLayer.insertSublayer(layer, at: 1)
+    }
+    
+    // Remove all drawn boxes. Must be called on main queue.
+    func removeBoxes() {
+        for layer in boxLayer {
+            layer.removeFromSuperlayer()
+        }
+        boxLayer.removeAll()
+    }
+    
+    typealias ColoredBoxGroup = (color: CGColor, boxes: [CGRect])
+    
+    // Draws groups of colored boxes.
+    func show(boxGroups: [ColoredBoxGroup]) {
+        DispatchQueue.main.async {
+            let layer = self.videoPreviewLayer
+            self.removeBoxes()
+            for boxGroup in boxGroups {
+                let color = boxGroup.color
+                for box in boxGroup.boxes {
+                    if let rect = layer?.layerRectConverted(fromMetadataOutputRect: box.applying(self.visionToAVFTransform)) {
+                        self.draw(rect: rect, color: color)
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 
@@ -168,6 +230,38 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
         return cell
     }
     
-    
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+         
+        if let index = self.modeCollectionView.indexPathsForSelectedItems?.first {
+            
+            print(index)
+            // update to change modes
+            
+            // add overlay run delegate method
+            // this one adds overlay afterwords
+            // https://developer.apple.com/documentation/vision/detecting_objects_in_still_images
+            // Running realtime numbers (adding realtime overlay)
+            // DetectingObjectsInStillImages (sample code for face, rect, barcode read)
+            
+            // need to add custom control here instead of CollectionView. Use collectionView for photo gallery.
+            //  horizontal scroll view containing multiple UILabel objects, each of which has an attached UITapGestureRecognizer.
+           //  https://www.raywenderlich.com/5294-how-to-make-a-custom-control-tutorial-a-reusable-knob
+            // check also Cocoa Controls for framework
+            
+        }
+    }
+}
+
+// MARK: - Utility extensions
+
+extension AVCaptureVideoOrientation {
+    init?(deviceOrientation: UIDeviceOrientation) {
+        switch deviceOrientation {
+        case .portrait: self = .portrait
+        case .portraitUpsideDown: self = .portraitUpsideDown
+        case .landscapeLeft: self = .landscapeRight
+        case .landscapeRight: self = .landscapeLeft
+        default: return nil
+        }
+    }
 }
