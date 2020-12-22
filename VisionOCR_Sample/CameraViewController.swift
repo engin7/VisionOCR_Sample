@@ -98,6 +98,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidAppear(animated)
         // Setup  Photo Camera:
 
+        configureCaptureSession()
         
     }
     
@@ -415,12 +416,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       // compare pupils location to eye brows
       
       var focusY:  CGFloat = 0
-      
-      if (avgY - eyebrowAvgY < CGFloat(23)) && (avgY - eyebrowAvgY > CGFloat(12)) {
+      let diff = avgY - eyebrowAvgY
+      // should compare with straight looking distance
+        
+      // FIXME - ADJUST FOR DIFFERENT PERSONS
+        
+      if (diff < diff * 1.2) && (diff > diff * 0.8) {
         focusY = avgY // straight look
-      } else if (avgY - eyebrowAvgY >= CGFloat(23)) {
+      } else if (diff >= diff * 1.2) {
         focusY = CGFloat(1500) // looking down
-      } else if (avgY - eyebrowAvgY <= CGFloat(12)) {
+      } else if (diff <= diff * 0.8) {
         focusY = CGFloat(-500) // looking up
       }
       
@@ -442,7 +447,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       }
       
     }
-    
     
     func detectedFace(request: VNRequest, error: Error?) {
       // Extract the first result from the array of face observation results.
@@ -511,11 +515,11 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             case 3:
                 // face detection
                 faceView.isHidden = false
-                configureCaptureSession()
+      
             case 4:
                 // face orientation
                 pitchView.isHidden = false
-                configureCaptureSession()
+         
             default:
                 print(index) // regular camera
             }
