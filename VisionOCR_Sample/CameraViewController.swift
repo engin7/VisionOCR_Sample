@@ -13,19 +13,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     private static let userDefaultsIdentifier = "flash"
     private static let collectionViewReuseIdentifier = "Cell"
-
     
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
     @IBOutlet weak var flashButton: UIButton!
+    
+    @IBOutlet var faceView: FaceView!
+    @IBOutlet var pitchView: PitchView!
+    
     private var resultsViewController: ResultsViewController?
     
     var maskLayer = CAShapeLayer()
     // Device orientation. Updated whenever the orientation changes
     var currentOrientation = UIDeviceOrientation.portrait
-    
-    
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -52,23 +53,22 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             selectedFlashMode = .on
             sender.setImage(UIImage(systemName: "bolt")!, for: UIControl.State.normal)
         }
-       
     }
     
     @IBAction func closeButtonPressed(_ sender: Any) {
         defaults.set(selectedFlashMode.rawValue, forKey: CameraViewController.userDefaultsIdentifier)
         dismiss(animated: true, completion: nil)
     }
-     
 
     private enum FlashPhotoMode: Int {
         case auto = 0,on,off
     }
  
     private var selectedFlashMode = FlashPhotoMode.auto
-    private var captureSession: AVCaptureSession!
+    private var captureSession = AVCaptureSession()
     private var stillImageOutput: AVCapturePhotoOutput!
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer!
+    private var sequenceHandler = VNSequenceRequestHandler() // to detect sequence of photos
     private var flashMode: AVCaptureDevice.FlashMode = .auto
     private var defaults = UserDefaults.standard
         
@@ -90,13 +90,25 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         setupFlash()
+        faceView.isHidden = true
+        pitchView.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Setup Camera:
-        captureSession = AVCaptureSession()
-        captureSession.sessionPreset = .low
+        // Setup  Photo Camera:
+
+        
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.captureSession.stopRunning()
+    }
+    
+    // put in didApper
+    func configurePhotoSession() {
         // select input device
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
             else {
@@ -120,9 +132,69 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.captureSession.stopRunning()
+    
+    func configureCaptureSession() {
+        
+        let dataOutputQueue = DispatchQueue(
+          label: "video data queue",
+          qos: .userInitiated,
+          attributes: [],
+          autoreleaseFrequency: .workItem)
+        
+      // Define the capture device we want to use
+      guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                 for: .video,
+                                                 position: .front) else {
+        fatalError("No front video camera available")
+      }
+      
+      // Connect the camera to the capture session input
+      do {
+        let cameraInput = try AVCaptureDeviceInput(device: camera)
+        // remove previous session inputs.
+        if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+            for input in inputs {
+                captureSession.removeInput(input)
+            }
+        }
+        captureSession.addInput(cameraInput)
+      } catch {
+        fatalError(error.localizedDescription)
+      }
+      
+      // Create the video data output
+      let videoOutput = AVCaptureVideoDataOutput()
+      videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
+      videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+      
+        // remove previous session outputs.
+         let outputs = captureSession.outputs
+            for output in outputs {
+                captureSession.removeOutput(output)
+            }
+     
+        // Add the video output to the capture session
+        captureSession.addOutput(videoOutput)
+      
+      let videoConnection = videoOutput.connection(with: .video)
+      videoConnection?.videoOrientation = .portrait
+      
+      // Configure the preview layer
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        videoPreviewLayer.videoGravity = .resizeAspectFill
+        videoPreviewLayer.frame = previewView.bounds
+        previewView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+        previewView.layer.addSublayer(videoPreviewLayer)
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            // captureSession can block the UI
+            self.captureSession.startRunning()
+            DispatchQueue.main.async {
+                // setting UI elements should be on the main thread
+                self.videoPreviewLayer.frame = self.previewView.bounds
+            }
+        }
+        
     }
     
     func setupLivePreview() {
@@ -212,31 +284,242 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             }
         }
     }
+     
+    func convert(rect: CGRect) -> CGRect {
+      // use helpful method from AVCaptureVideoPreviewLayer to convert origin and size
+      let origin = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.origin)
+      // convert the normalized size to the preview layer’s coordinate system.
+      let size = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.size.cgPoint)
+    
+      return CGRect(origin: origin, size: size.cgSize)
+    }
+
+    
+    // helper methods for face landmarks: Define a method which converts a landmark point to something that can be drawn on the screen.
+    func landmark(point: CGPoint, to rect: CGRect) -> CGPoint {
+      // Calculate the absolute position of the normalized point by using a Core Graphics extension defined in CoreGraphicsExtensions.swift
+      let absolute = point.absolutePoint(in: rect)
+      // Convert the point to the preview layer’s coordinate system.
+      let converted = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: absolute)
+      
+      return converted
+    }
+
+    // method takes an array of these landmark points and converts them all.
+    func landmark(points: [CGPoint]?, to rect: CGRect) -> [CGPoint]? {
+      return points?.compactMap { landmark(point: $0, to: rect) }
+    }
+
+    //MARK: - VNFaceLandmarkRegion2D methods
+    
+    func updateFaceView(for result: VNFaceObservation) {
+      defer {
+        DispatchQueue.main.async { [self] in
+          self.faceView.setNeedsDisplay()
+        }
+      }
+
+      let box = result.boundingBox
+      faceView.boundingBox = convert(rect: box)
+
+      guard let landmarks = result.landmarks else {
+        return
+      }
+      // make up the leftEye into coordinates that work with the preview layer. If everything went well, you assign those converted points to leftEye
+      if let leftEye = landmark(
+        points: landmarks.leftEye?.normalizedPoints, // declared in VNFaceLandmarkRegion2D
+        to: result.boundingBox) {
+        faceView.leftEye = leftEye // declared in FaceView
+      }
+      
+      //13 add other landmarks for the function
+      if let rightEye = landmark(
+        points: landmarks.rightEye?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.rightEye = rightEye
+      }
+          
+      if let leftEyebrow = landmark(
+        points: landmarks.leftEyebrow?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.leftEyebrow = leftEyebrow
+      }
+          
+      if let rightEyebrow = landmark(
+        points: landmarks.rightEyebrow?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.rightEyebrow = rightEyebrow
+      }
+          
+      if let nose = landmark(
+        points: landmarks.nose?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.nose = nose
+      }
+          
+      if let outerLips = landmark(
+        points: landmarks.outerLips?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.outerLips = outerLips
+      }
+          
+      if let innerLips = landmark(
+        points: landmarks.innerLips?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.innerLips = innerLips
+      }
+          
+      if let faceContour = landmark(
+        points: landmarks.faceContour?.normalizedPoints,
+        to: result.boundingBox) {
+        faceView.faceContour = faceContour
+      }
+
+    }
+
+    //MARK: - LASER method for Tilt (up&down condition)
+    
+    func updatePitchView(for result: VNFaceObservation) {
+      
+      pitchView.clear()
+      
+      var origins: [CGPoint] = []
+      // laser origin based on left and right pupil
+      if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
+        let origin = landmark(point: point, to: result.boundingBox)
+        origins.append(origin)
+      }
+      if let point = result.landmarks?.rightPupil?.normalizedPoints.first {
+        let origin = landmark(point: point, to: result.boundingBox)
+        origins.append(origin)
+      }
+     
+      // Calculate the average y coordinate of the laser origins.
+      let avgY = origins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
+      
+      // get eyebrow locations
+      var eyebrowOrigins: [CGPoint] = []
+      
+      if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
+        let origin = landmark(point: point, to: result.boundingBox)
+        eyebrowOrigins.append(origin)
+      }
+      if let point = result.landmarks?.rightEyebrow?.normalizedPoints.first {
+        let origin = landmark(point: point, to: result.boundingBox)
+        eyebrowOrigins.append(origin)
+      }
+      
+      // Calculate the average y coordinate of the laser origins.
+      let eyebrowAvgY = eyebrowOrigins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
+      
+      // compare pupils location to eye brows
+      
+      var focusY:  CGFloat = 0
+      
+      if (avgY - eyebrowAvgY < CGFloat(23)) && (avgY - eyebrowAvgY > CGFloat(12)) {
+        focusY = avgY // straight look
+      } else if (avgY - eyebrowAvgY >= CGFloat(23)) {
+        focusY = CGFloat(1500) // looking down
+      } else if (avgY - eyebrowAvgY <= CGFloat(12)) {
+        focusY = CGFloat(-500) // looking up
+      }
+      
+      // calculate the x coordinates of the pupils
+      let avgX = origins.map { $0.x }.reduce(0.0, +) / CGFloat(origins.count)
+      let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
+      
+      let focus = CGPoint(x: focusX, y: focusY)
+      
+      let originsCenter = CGPoint(x: avgX, y: avgY)
+      
+      let laser = Pitch(origin: originsCenter, focus: focus)
+     
+      pitchView.add(tilt: laser)
+    
+      // Tell the iPhone that the TiltView should be redrawn.
+      DispatchQueue.main.async {
+        self.pitchView.setNeedsDisplay()
+      }
+      
+    }
+    
+    
+    func detectedFace(request: VNRequest, error: Error?) {
+      // Extract the first result from the array of face observation results.
+      guard
+        let results = request.results as? [VNFaceObservation],
+        let result = results.first
+        else {
+          // Clear the FaceView if something goes wrong or no face is detected.
+          faceView.clear()
+          return
+      }
+        
+        DispatchQueue.main.async() { [self] in
+            
+            if !faceView.isHidden {
+             updateFaceView(for: result)
+          } else if !pitchView.isHidden {
+            updatePitchView(for: result)
+          }
+            
+        }
+     
+
+    }
     
 }
-
-
+ 
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
      
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-            return 4 // will change
+            return 5 // will change
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CameraViewController.collectionViewReuseIdentifier, for: indexPath) as! CameraCollectionViewCell
         
-        cell.cameraModesLabel.text = "Scan Mode"
+        switch indexPath.row {
+            case 1:
+                cell.cameraModesLabel.text = "Barcode"
+            case 2:
+                cell.cameraModesLabel.text = "Document"
+            case 3:
+                cell.cameraModesLabel.text = "Face Detection"
+            case 4:
+                cell.cameraModesLabel.text = "Face Orientation"
+            default:
+                cell.cameraModesLabel.text = "Camera"
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
          
-        if let index = self.modeCollectionView.indexPathsForSelectedItems?.first {
+        if let index = self.modeCollectionView.indexPathsForSelectedItems?.first?.row {
             
-            print(index)
             // update to change modes
             
+            faceView.isHidden = true
+            pitchView.isHidden = true
+            
+            switch index {
+            case 1:
+                print(index) //barcode
+            case 2:
+                print(index) //docuemtn
+            case 3:
+                // face detection
+                faceView.isHidden = false
+                configureCaptureSession()
+            case 4:
+                // face orientation
+                pitchView.isHidden = false
+                configureCaptureSession()
+            default:
+                print(index) // regular camera
+            }
+             
             // add overlay run delegate method
             // this one adds overlay afterwords
             // https://developer.apple.com/documentation/vision/detecting_objects_in_still_images
@@ -245,11 +528,12 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             // need to add custom control here instead of CollectionView. Use collectionView for photo gallery.
             //  horizontal scroll view containing multiple UILabel objects, each of which has an attached UITapGestureRecognizer.
-           //  https://www.raywenderlich.com/5294-how-to-make-a-custom-control-tutorial-a-reusable-knob
+            //  https://www.raywenderlich.com/5294-how-to-make-a-custom-control-tutorial-a-reusable-knob
             // check also Cocoa Controls for framework
             
         }
     }
+
 }
 
 // MARK: - Utility extensions
@@ -264,4 +548,33 @@ extension AVCaptureVideoOrientation {
         default: return nil
         }
     }
+}
+
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate methods
+
+extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+   
+  func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    // Get the image buffer from the passed in sample buffer.
+    guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+      return
+    }
+
+    // Create a face detection request to detect face bounding boxes and pass the results to a completion handler.
+//    let detectFaceRequest = VNDetectFaceRectanglesRequest(completionHandler: detectedFace) //call func detectedFace after completing
+    
+    //to detect face landmarks update request type
+    let detectFaceRequest = VNDetectFaceLandmarksRequest(completionHandler: detectedFace)
+
+    // Use your previously defined sequence request handler to perform your face detection request on the image.
+    do {
+      try sequenceHandler.perform(
+        [detectFaceRequest],
+        on: imageBuffer,
+        orientation: .leftMirrored) // tells request handler what orientation of the input image is
+    } catch {
+      print(error.localizedDescription)
+    }
+
+  }
 }
