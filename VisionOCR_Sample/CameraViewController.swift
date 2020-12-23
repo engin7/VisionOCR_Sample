@@ -208,15 +208,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
           autoreleaseFrequency: .workItem)
         
       // Define the capture device we want to use
-      guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera,
-                                                 for: .video,
-                                                 position: .front) else {
-        fatalError("No front video camera available")
-      }
+        guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
+            else {
+                print("Unable to access back camera!")
+                return
+        }
       
       // Connect the camera to the capture session input
       do {
-        let cameraInput = try AVCaptureDeviceInput(device: camera)
+        let cameraInput = try AVCaptureDeviceInput(device: backCamera)
         // remove previous session inputs.
         if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
             for input in inputs {
