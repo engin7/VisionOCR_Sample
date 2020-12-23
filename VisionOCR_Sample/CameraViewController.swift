@@ -97,8 +97,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Setup  Photo Camera:
-
-        configureCaptureSession()
+        configurePhotoSession()
         
     }
     
@@ -111,6 +110,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // put in didApper
     func configurePhotoSession() {
         // select input device
+        captureSession.stopRunning()
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
             else {
                 print("Unable to access back camera!")
@@ -121,9 +121,22 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             let input = try AVCaptureDeviceInput(device: backCamera)
             // AVCapturePhotoOutput to help us attach the output to the session.
             stillImageOutput = AVCapturePhotoOutput()
+            
+            // remove previous session inputs.
+            if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+                for input in inputs {
+                    captureSession.removeInput(input)
+                }
+            }
             // if there are no errors, then go ahead and add input add output to the Session.
             if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
                 captureSession.addInput(input)
+                // remove previous session outputs.
+                 let outputs = captureSession.outputs
+                    for output in outputs {
+                        captureSession.removeOutput(output)
+                    }
+                
                 captureSession.addOutput(stillImageOutput)
                 setupLivePreview()
             }
@@ -135,6 +148,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     
     func configureCaptureSession() {
+        
+        captureSession.stopRunning()
         
         let dataOutputQueue = DispatchQueue(
           label: "video data queue",
@@ -204,6 +219,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = .portrait
+        previewView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
         previewView.layer.addSublayer(videoPreviewLayer)
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -417,15 +433,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       var focusY:  CGFloat = 0
       let diff = avgY - eyebrowAvgY
-      // should compare with straight looking distance
         
       // FIXME - ADJUST FOR DIFFERENT PERSONS
         
-      if (diff < diff * 1.2) && (diff > diff * 0.8) {
+      if (diff < CGFloat(19)) && (diff > CGFloat(13)) {
         focusY = avgY // straight look
-      } else if (diff >= diff * 1.2) {
+      } else if (diff >= CGFloat(19)) {
         focusY = CGFloat(1500) // looking down
-      } else if (diff <= diff * 0.8) {
+      } else if (diff <= CGFloat(13)) {
         focusY = CGFloat(-500) // looking up
       }
       
@@ -468,8 +483,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
           }
             
         }
-     
-
     }
     
 }
@@ -511,17 +524,18 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             case 1:
                 print(index) //barcode
             case 2:
-                print(index) //docuemtn
+                print(index) //document
             case 3:
                 // face detection
                 faceView.isHidden = false
-      
+                configureCaptureSession()
             case 4:
                 // face orientation
                 pitchView.isHidden = false
-         
+                configureCaptureSession()
             default:
-                print(index) // regular camera
+                // regular camera
+                configurePhotoSession()
             }
              
             // add overlay run delegate method
