@@ -158,8 +158,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "CameraViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "593"
-            endingLineNumber = "593"
+            startingLineNumber = "638"
+            endingLineNumber = "638"
             landmarkName = "captureOutput(_:didOutput:from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "596"
-            endingLineNumber = "596"
+            startingLineNumber = "641"
+            endingLineNumber = "641"
             landmarkName = "captureOutput(_:didOutput:from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,8 +254,10 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "645"
-            endingLineNumber = "645">
+            startingLineNumber = "642"
+            endingLineNumber = "642"
+            landmarkName = "captureOutput(_:didOutput:from:)"
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "C6423A17-0F7C-40E6-847E-F43A1CCF7D74 - 9e280159eff1bbfd"
@@ -300,8 +302,10 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "620"
-            endingLineNumber = "620">
+            startingLineNumber = "617"
+            endingLineNumber = "617"
+            landmarkName = "init(deviceOrientation:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -314,8 +318,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "536"
-            endingLineNumber = "536"
+            startingLineNumber = "581"
+            endingLineNumber = "581"
             landmarkName = "collectionView(_:didSelectItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,8 +334,10 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "625"
-            endingLineNumber = "625">
+            startingLineNumber = "622"
+            endingLineNumber = "622"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -344,8 +350,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "configureCaptureSession()"
             landmarkType = "7">
          </BreakpointContent>
@@ -362,8 +368,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "41"
             endingLineNumber = "41"
-            landmarkName = "didTakePhoto(_:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -378,8 +384,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
             endingLineNumber = "40"
-            landmarkName = "didTakePhoto(_:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

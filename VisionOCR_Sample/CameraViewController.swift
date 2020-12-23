@@ -41,9 +41,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         stillImageOutput.capturePhoto(with: settings, delegate: self)
      }
      
-    
     @IBAction func changeCameraButtonPressed(_ sender: Any) {
-        
+        swapCamera()
     }
     
     @IBAction func flashButtonPressed(_ sender: UIButton) {
@@ -103,13 +102,59 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidAppear(animated)
         // Setup  Photo Camera:
         configurePhotoSession()
-        
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.captureSession.stopRunning()
+    }
+    
+    /// Swap camera and reconfigures camera session with new input
+    fileprivate func swapCamera() {
+
+        // Get current input
+        guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
+        
+        // Begin new session configuration and defer commit
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+        
+        // Create new capture device
+        var newDevice: AVCaptureDevice?
+        if input.device.position == .back {
+            newDevice = captureDevice(with: .front)
+        } else {
+            newDevice = captureDevice(with: .back)
+        }
+        
+        // Create new capture input
+        var deviceInput: AVCaptureDeviceInput!
+        do {
+            deviceInput = try AVCaptureDeviceInput(device: newDevice!)
+        } catch let error {
+            print(error.localizedDescription)
+            return
+        }
+        
+        // Swap capture device inputs
+        captureSession.removeInput(input)
+        captureSession.addInput(deviceInput)
+    }
+
+    /// Create new capture device with requested position
+    fileprivate func captureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+
+        let devices = AVCaptureDevice.DiscoverySession(deviceTypes: [ .builtInWideAngleCamera, .builtInMicrophone, .builtInDualCamera, .builtInTelephotoCamera ], mediaType: AVMediaType.video, position: .unspecified).devices
+
+        //if let devices = devices {
+            for device in devices {
+                if device.position == position {
+                    return device
+                }
+            }
+        //}
+
+        return nil
     }
     
     // put in didApper
