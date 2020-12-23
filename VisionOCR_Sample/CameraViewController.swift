@@ -41,6 +41,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         stillImageOutput.capturePhoto(with: settings, delegate: self)
      }
      
+    
+    @IBAction func changeCameraButtonPressed(_ sender: Any) {
+        
+    }
+    
     @IBAction func flashButtonPressed(_ sender: UIButton) {
         switch  selectedFlashMode {
         case .on:

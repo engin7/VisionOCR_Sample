@@ -215,6 +215,15 @@
                                     <action selector="closeButtonPressed:" destination="wKK-1L-4Vu" eventType="touchUpInside" id="Kkz-KW-bCK"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zlx-f7-JU4">
+                                <rect key="frame" x="363" y="642" width="31" height="23"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="arrow.triangle.2.circlepath.camera.fill" catalog="system" symbolScale="large"/>
+                                </state>
+                                <connections>
+                                    <action selector="changeCameraButtonPressed:" destination="wKK-1L-4Vu" eventType="touchUpInside" id="duN-6e-AGv"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bsz-di-FHK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -225,6 +234,7 @@
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="trailing" secondItem="bsz-di-FHK" secondAttribute="trailing" id="8Mo-b0-9Tm"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="nVM-GE-rdn" secondAttribute="trailing" constant="8" id="A0j-Pq-dFF"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="Dgu-ye-esd"/>
+                            <constraint firstItem="zlx-f7-JU4" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" constant="71" id="Frl-UA-6Iz"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" id="HDk-VZ-tym"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="PXr-6K-vp5"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="Q5q-Me-SfW"/>
@@ -234,6 +244,7 @@
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="trailing" secondItem="25A-y7-uar" secondAttribute="trailing" id="Vxo-XA-Kt3"/>
                             <constraint firstAttribute="bottom" secondItem="0DI-8s-fNv" secondAttribute="bottom" id="avX-1v-rqb"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="71" id="h7X-2V-uCa"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
                             <constraint firstItem="nVM-GE-rdn" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="ohX-pj-6v5"/>
@@ -242,6 +253,7 @@
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="8" id="u8z-Pe-EZq"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="dnR-rr-mPG" secondAttribute="bottom" id="uJd-UQ-XBs"/>
                             <constraint firstItem="dnR-rr-mPG" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="weq-jM-sRJ"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="zlx-f7-JU4" secondAttribute="trailing" constant="20" id="ytE-M5-NO4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Oct-Xl-KxT"/>
@@ -397,6 +409,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.triangle.2.circlepath.camera.fill" catalog="system" width="128" height="94"/>
         <image name="bolt.badge.a" catalog="system" width="110" height="128"/>
         <image name="camera.fill" catalog="system" width="128" height="94"/>
         <image name="checkmark.rectangle.fill" catalog="system" width="128" height="93"/>
