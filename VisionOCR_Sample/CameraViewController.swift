@@ -21,11 +21,28 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     @IBOutlet var faceView: FaceView!
     @IBOutlet var pitchView: PitchView!
+    private var barcodeMode = false
     
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
     
     var maskLayer = CAShapeLayer()
+    // Layer into which to draw bounding box paths.
+    var pathLayer: CALayer?
+    
+    // MARK: Make VNDetectBarcodesRequest variable
+
+    lazy var detectBarcodeRequest = VNDetectBarcodesRequest { request, error in
+      guard error == nil else {
+        self.showAlert(
+          withTitle: "Barcode error",
+          message: error?.localizedDescription ?? "error")
+        return
+      }
+      // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
+      self.processClassification(request)
+    }
+
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -145,19 +162,77 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     }
     
+    // MARK: Barcode Reader
+    
+    // MARK: - Path-Drawing
+    
+    fileprivate func boundingBox(forRegionOfInterest: CGRect, withinImageBounds bounds: CGRect) -> CGRect {
+        
+        let imageWidth = bounds.width
+        let imageHeight = bounds.height
+        
+        // Begin with input rect.
+        var rect = forRegionOfInterest
+        
+        // Reposition origin.
+        rect.origin.x *= imageWidth
+        rect.origin.x += bounds.origin.x
+        rect.origin.y = (1 - rect.origin.y) * imageHeight + bounds.origin.y
+        
+        // Rescale normalized coordinates.
+        rect.size.width *= imageWidth
+        rect.size.height *= imageHeight
+        
+        return rect
+    }
+    
+    fileprivate func shapeLayer(color: UIColor, frame: CGRect) -> CAShapeLayer {
+        // Create a new layer.
+        let layer = CAShapeLayer()
+        
+        // Configure layer's appearance.
+        layer.fillColor = nil // No fill to show boxed object
+        layer.shadowOpacity = 0
+        layer.shadowRadius = 0
+        layer.borderWidth = 2
+        
+        // Vary the line color according to input.
+        layer.borderColor = color.cgColor
+        
+        // Locate the layer.
+        layer.anchorPoint = .zero
+        layer.frame = frame
+        layer.masksToBounds = true
+        
+        // Transform the layer to have same coordinate system as the imageView underneath it.
+        layer.transform = CATransform3DMakeScale(1, -1, 1)
+        
+        return layer
+    }
+    
+    // Barcodes are ORANGE.
+    fileprivate func draw(barcodes: [VNBarcodeObservation], onImageWithBounds bounds: CGRect) {
+        CATransaction.begin()
+        for observation in barcodes {
+            let barcodeBox = boundingBox(forRegionOfInterest: observation.boundingBox, withinImageBounds: bounds)
+            let barcodeLayer = shapeLayer(color: .orange, frame: barcodeBox)
+            
+            // Add to pathLayer on top of image.
+            pathLayer?.addSublayer(barcodeLayer)
+        }
+        CATransaction.commit()
+    }
+  
     /// Create new capture device with requested position
     fileprivate func captureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
 
         let devices = AVCaptureDevice.DiscoverySession(deviceTypes: [ .builtInWideAngleCamera, .builtInMicrophone, .builtInDualCamera, .builtInTelephotoCamera ], mediaType: AVMediaType.video, position: .unspecified).devices
   
-        
             for device in devices {
                 if device.position == position {
                     return device
                 }
             }
-     
-
         return nil
     }
     
@@ -543,6 +618,54 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
     
+    private func showAlert(withTitle title: String, message: String) {
+      DispatchQueue.main.async {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alertController, animated: true)
+      }
+    }
+    
+    // MARK: - Vision Barcode scan
+    func processClassification(_ request: VNRequest) {
+      // TODO: Main logic
+      // 1 get a list of potential barcodes from the request
+      guard let barcodes = request.results else { return }
+      DispatchQueue.main.async { [self] in
+        if captureSession.isRunning {
+          view.layer.sublayers?.removeSubrange(1...)
+
+          // 2 Loop through the potential barcodes to analyze each one individually.
+          for barcode in barcodes {
+            
+            guard
+              // TODO: Check for QR Code symbology and confidence score
+              let potentialQRCode = barcode as? VNBarcodeObservation,
+              potentialQRCode.confidence > 0.9
+              else { return }
+
+            // 3 if one of the results happens to be a barcode, you show an alert with the barcode type and the string encoded in the barcode.
+            showAlert(
+              withTitle: potentialQRCode.payloadStringValue ?? "",
+              // TODO: Check the confidence score
+              message: String(potentialQRCode.confidence))
+          }
+            // Perform drawing on the main thread.
+            DispatchQueue.main.async {
+                guard let drawLayer = self.pathLayer,
+                      let results = request.results as? [VNBarcodeObservation] else {
+                        return
+                }
+                self.draw(barcodes: results, onImageWithBounds: drawLayer.bounds)
+                drawLayer.setNeedsDisplay()
+            }
+            
+        }
+      }
+
+      
+    }
+    
 }
  
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -622,9 +745,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
       return
     }
 
-    // Get current input
-    guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
-  
     // Create a face detection request to detect face bounding boxes and pass the results to a completion handler.
 //    let detectFaceRequest = VNDetectFaceRectanglesRequest(completionHandler: detectedFace) //call func detectedFace after completing
     
@@ -640,6 +760,18 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     } catch {
       print(error.localizedDescription)
     }
+    if barcodeMode {
+        let imageRequestHandler = VNImageRequestHandler(
+          cvPixelBuffer: imageBuffer,
+          orientation: .right)
 
+        // 3 Perform the detectBarcodeRequest using the handler.
+        do {
+          try imageRequestHandler.perform([detectBarcodeRequest])
+        } catch {
+          print(error)
+        }
+    }
+    
   }
 }
