@@ -351,16 +351,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             }
         }
     }
-     
-    func convert(rect: CGRect) -> CGRect {
-      // use helpful method from AVCaptureVideoPreviewLayer to convert origin and size
-      let origin = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.origin)
-      // convert the normalized size to the preview layer’s coordinate system.
-      let size = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.size.cgPoint)
-    
-      return CGRect(origin: origin, size: size.cgSize)
-    }
 
+    // if you also use back camera convert
+    func convert(rect: CGRect) -> CGRect {
+        // 1 Calculates the location of the opposite corner to the origin of the rectangle.
+        let opposite = rect.origin + rect.size.cgPoint
+        let origin = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.origin)
+
+        // 2 Converts this opposite corner to its location in the previewLayer
+        let opp = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: opposite)
+
+        // 3 Calculates the size by subtracting the two points.
+        let size = (opp - origin).cgSize
+        return CGRect(origin: origin, size: size)
+    }
     
     // helper methods for face landmarks: Define a method which converts a landmark point to something that can be drawn on the screen.
     func landmark(point: CGPoint, to rect: CGRect) -> CGPoint {
@@ -385,7 +389,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
           self.faceView.setNeedsDisplay()
         }
       }
-
+        
       let box = result.boundingBox
       faceView.boundingBox = convert(rect: box)
 
@@ -437,7 +441,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       }
           
       if let faceContour = landmark(
-        points: landmarks.faceContour?.normalizedPoints,
+            points: landmarks.faceContour?.normalizedPoints,
         to: result.boundingBox) {
         faceView.faceContour = faceContour
       }
@@ -503,7 +507,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       let originsCenter = CGPoint(x: avgX, y: avgY)
       
       let laser = Pitch(origin: originsCenter, focus: focus)
-     
+      
       pitchView.add(tilt: laser)
     
       // Tell the iPhone that the TiltView should be redrawn.
@@ -604,20 +608,6 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
 
 }
 
-// MARK: - Utility extensions
-
-extension AVCaptureVideoOrientation {
-    init?(deviceOrientation: UIDeviceOrientation) {
-        switch deviceOrientation {
-        case .portrait: self = .portrait
-        case .portraitUpsideDown: self = .portraitUpsideDown
-        case .landscapeLeft: self = .landscapeRight
-        case .landscapeRight: self = .landscapeLeft
-        default: return nil
-        }
-    }
-}
-
 // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate methods
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -628,6 +618,17 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
       return
     }
 
+    // Get current input
+    guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
+    
+    let orientation:CGImagePropertyOrientation
+    
+    if input.device.position == .back {
+        orientation = .leftMirrored
+    } else {
+        orientation = .downMirrored
+    }
+    
     // Create a face detection request to detect face bounding boxes and pass the results to a completion handler.
 //    let detectFaceRequest = VNDetectFaceRectanglesRequest(completionHandler: detectedFace) //call func detectedFace after completing
     
@@ -639,7 +640,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
       try sequenceHandler.perform(
         [detectFaceRequest],
         on: imageBuffer,
-        orientation: .leftMirrored) // tells request handler what orientation of the input image is
+        orientation: orientation) // tells request handler what orientation of the input image is
     } catch {
       print(error.localizedDescription)
     }
