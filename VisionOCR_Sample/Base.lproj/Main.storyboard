@@ -216,7 +216,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zlx-f7-JU4">
-                                <rect key="frame" x="363" y="642" width="31" height="23"/>
+                                <rect key="frame" x="330" y="632" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="3vy-mq-aVK"/>
+                                    <constraint firstAttribute="width" constant="64" id="rfl-L6-cej"/>
+                                </constraints>
                                 <state key="normal">
                                     <imageReference key="image" image="arrow.triangle.2.circlepath.camera.fill" catalog="system" symbolScale="large"/>
                                 </state>
@@ -230,11 +234,11 @@
                         <constraints>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="fOG-qP-agM" secondAttribute="bottom" id="06H-ay-fxB"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" constant="50" id="0EL-OT-nSs"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="40" id="2Qw-gE-Vc3"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="2y7-n1-wcg"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="trailing" secondItem="bsz-di-FHK" secondAttribute="trailing" id="8Mo-b0-9Tm"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="nVM-GE-rdn" secondAttribute="trailing" constant="8" id="A0j-Pq-dFF"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="Dgu-ye-esd"/>
-                            <constraint firstItem="zlx-f7-JU4" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" constant="71" id="Frl-UA-6Iz"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" id="HDk-VZ-tym"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="PXr-6K-vp5"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="Q5q-Me-SfW"/>
@@ -244,7 +248,6 @@
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="trailing" secondItem="25A-y7-uar" secondAttribute="trailing" id="Vxo-XA-Kt3"/>
                             <constraint firstAttribute="bottom" secondItem="0DI-8s-fNv" secondAttribute="bottom" id="avX-1v-rqb"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
-                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="71" id="h7X-2V-uCa"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
                             <constraint firstItem="nVM-GE-rdn" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="ohX-pj-6v5"/>
