@@ -23,10 +23,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet var pitchView: PitchView!
     
     private var resultsViewController: ResultsViewController?
+    private var orientation:CGImagePropertyOrientation = .leftMirrored
     
     var maskLayer = CAShapeLayer()
-    // Device orientation. Updated whenever the orientation changes
-    var currentOrientation = UIDeviceOrientation.portrait
     
     @IBAction func didTakePhoto(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -63,11 +62,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         defaults.set(selectedFlashMode.rawValue, forKey: CameraViewController.userDefaultsIdentifier)
         dismiss(animated: true, completion: nil)
     }
-
+    
     private enum FlashPhotoMode: Int {
         case auto = 0,on,off
     }
- 
+    
     private var selectedFlashMode = FlashPhotoMode.auto
     private var captureSession = AVCaptureSession()
     private var stillImageOutput: AVCapturePhotoOutput!
@@ -112,6 +111,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     /// Swap camera and reconfigures camera session with new input
     fileprivate func swapCamera() {
 
+        // hide all
+         
+        
         // Get current input
         guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
         
@@ -123,6 +125,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         var newDevice: AVCaptureDevice?
         if input.device.position == .back {
             newDevice = captureDevice(with: .front)
+            orientation = .downMirrored
         } else {
             newDevice = captureDevice(with: .back)
         }
@@ -139,20 +142,21 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // Swap capture device inputs
         captureSession.removeInput(input)
         captureSession.addInput(deviceInput)
-    }
 
+    }
+    
     /// Create new capture device with requested position
     fileprivate func captureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
 
         let devices = AVCaptureDevice.DiscoverySession(deviceTypes: [ .builtInWideAngleCamera, .builtInMicrophone, .builtInDualCamera, .builtInTelephotoCamera ], mediaType: AVMediaType.video, position: .unspecified).devices
-
-        //if let devices = devices {
+  
+        
             for device in devices {
                 if device.position == position {
                     return device
                 }
             }
-        //}
+     
 
         return nil
     }
@@ -357,10 +361,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // 1 Calculates the location of the opposite corner to the origin of the rectangle.
         let opposite = rect.origin + rect.size.cgPoint
         let origin = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: rect.origin)
-
+        
         // 2 Converts this opposite corner to its location in the previewLayer
         let opp = videoPreviewLayer.layerPointConverted(fromCaptureDevicePoint: opposite)
-
+        
         // 3 Calculates the size by subtracting the two points.
         let size = (opp - origin).cgSize
         return CGRect(origin: origin, size: size)
@@ -620,15 +624,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // Get current input
     guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }
-    
-    let orientation:CGImagePropertyOrientation
-    
-    if input.device.position == .back {
-        orientation = .leftMirrored
-    } else {
-        orientation = .downMirrored
-    }
-    
+  
     // Create a face detection request to detect face bounding boxes and pass the results to a completion handler.
 //    let detectFaceRequest = VNDetectFaceRectanglesRequest(completionHandler: detectedFace) //call func detectedFace after completing
     
