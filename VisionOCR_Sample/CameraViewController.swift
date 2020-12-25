@@ -21,7 +21,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     @IBOutlet var faceView: FaceView!
     @IBOutlet var pitchView: PitchView!
-    private var barcodeMode = true
+    private var barcodeMode = false
     
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
@@ -569,11 +569,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
       // FIXME - ADJUST FOR DIFFERENT PERSONS
         
-      if (diff < CGFloat(19)) && (diff > CGFloat(13)) {
+      if (diff < CGFloat(22)) && (diff > CGFloat(17)) {
         focusY = avgY // straight look
-      } else if (diff >= CGFloat(19)) {
+      } else if (diff >= CGFloat(22)) {
         focusY = CGFloat(1500) // looking down
-      } else if (diff <= CGFloat(13)) {
+      } else if (diff <= CGFloat(17)) {
         focusY = CGFloat(-500) // looking up
       }
       
@@ -714,7 +714,7 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             faceView.isHidden = true
             pitchView.isHidden = true
-//            barcodeMode = false
+            barcodeMode = false
 
             switch index {
             case 1:
