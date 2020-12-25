@@ -643,11 +643,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
               let potentialQRCode = barcode as? VNBarcodeObservation,
               potentialQRCode.confidence > 0.9
               else { return }
-            
+            addLayer()
             // Perform drawing on the main thread.
             DispatchQueue.main.async {
                 guard let drawLayer = self.pathLayer,
-                      let results = barcode as? [VNBarcodeObservation] else {
+                      let results = request.results as? [VNBarcodeObservation] else {
                         return
                 }
                 self.draw(barcodes: results, onImageWithBounds: drawLayer.bounds)
@@ -668,6 +668,18 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
     }
     
+    func addLayer() {
+        // Remove previous paths & image
+        pathLayer?.removeFromSuperlayer()
+        pathLayer = nil
+        let drawingLayer = CALayer()
+        drawingLayer.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        drawingLayer.anchorPoint = CGPoint.zero
+        drawingLayer.position = CGPoint(x: 0, y: 0)
+        drawingLayer.opacity = 0.5
+        pathLayer = drawingLayer
+        self.view.layer.addSublayer(pathLayer!)
+    }
 }
  
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
