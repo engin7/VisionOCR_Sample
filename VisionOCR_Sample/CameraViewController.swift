@@ -21,7 +21,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     @IBOutlet var faceView: FaceView!
     @IBOutlet var pitchView: PitchView!
-    private var barcodeMode = false
+    private var barcodeMode = true
     
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
@@ -633,7 +633,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       guard let barcodes = request.results else { return }
       DispatchQueue.main.async { [self] in
         if captureSession.isRunning {
-          view.layer.sublayers?.removeSubrange(1...)
+//          view.layer.sublayers?.removeSubrange(1...)
 
           // 2 Loop through the potential barcodes to analyze each one individually.
           for barcode in barcodes {
@@ -643,22 +643,24 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
               let potentialQRCode = barcode as? VNBarcodeObservation,
               potentialQRCode.confidence > 0.9
               else { return }
-
+            
+            // Perform drawing on the main thread.
+            DispatchQueue.main.async {
+                guard let drawLayer = self.pathLayer,
+                      let results = barcode as? [VNBarcodeObservation] else {
+                        return
+                }
+                self.draw(barcodes: results, onImageWithBounds: drawLayer.bounds)
+                drawLayer.setNeedsDisplay()
+            }
+            
             // 3 if one of the results happens to be a barcode, you show an alert with the barcode type and the string encoded in the barcode.
             showAlert(
               withTitle: potentialQRCode.payloadStringValue ?? "",
               // TODO: Check the confidence score
               message: String(potentialQRCode.confidence))
           }
-            // Perform drawing on the main thread.
-            DispatchQueue.main.async {
-                guard let drawLayer = self.pathLayer,
-                      let results = request.results as? [VNBarcodeObservation] else {
-                        return
-                }
-                self.draw(barcodes: results, onImageWithBounds: drawLayer.bounds)
-                drawLayer.setNeedsDisplay()
-            }
+       
             
         }
       }
@@ -700,10 +702,13 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             faceView.isHidden = true
             pitchView.isHidden = true
-            
+//            barcodeMode = false
+
             switch index {
             case 1:
                 print(index) //barcode
+                barcodeMode = true
+                configureCaptureSession()
             case 2:
                 print(index) //document
             case 3:
@@ -744,22 +749,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
       return
     }
-
-    // Create a face detection request to detect face bounding boxes and pass the results to a completion handler.
-//    let detectFaceRequest = VNDetectFaceRectanglesRequest(completionHandler: detectedFace) //call func detectedFace after completing
-    
-    //to detect face landmarks update request type
-    let detectFaceRequest = VNDetectFaceLandmarksRequest(completionHandler: detectedFace)
-
-    // Use your previously defined sequence request handler to perform your face detection request on the image.
-    do {
-      try sequenceHandler.perform(
-        [detectFaceRequest],
-        on: imageBuffer,
-        orientation: orientation) // tells request handler what orientation of the input image is
-    } catch {
-      print(error.localizedDescription)
-    }
+      
     if barcodeMode {
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: imageBuffer,
@@ -770,6 +760,19 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
           try imageRequestHandler.perform([detectBarcodeRequest])
         } catch {
           print(error)
+        }
+    } else {
+        //to detect face landmarks update request type
+        let detectFaceRequest = VNDetectFaceLandmarksRequest(completionHandler: detectedFace)
+
+        // Use your previously defined sequence request handler to perform your face detection request on the image.
+        do {
+          try sequenceHandler.perform(
+            [detectFaceRequest],
+            on: imageBuffer,
+            orientation: orientation) // tells request handler what orientation of the input image is
+        } catch {
+          print(error.localizedDescription)
         }
     }
     
