@@ -147,7 +147,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     fileprivate func swapCamera() {
 
         // hide all
-         
         
         // Get current input
         guard let input = captureSession.inputs[0] as? AVCaptureDeviceInput else { return }

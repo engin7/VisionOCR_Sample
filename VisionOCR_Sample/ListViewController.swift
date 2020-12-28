@@ -102,6 +102,22 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
+    func processImageFromCam(image: UIImage?) {
+        guard let cgImage = image?.cgImage else {
+            print("Failed to get cgimage from input image")
+            return
+        }
+        // image-request handler
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .right, options: [:])
+        //  created new request to recognize text: var textRecognitionRequest = VNRecognizeTextRequest()
+        do {
+            try handler.perform([textRecognitionRequest]) // perform the request *accurate path is default
+        } catch {
+            print(error)
+        }
+    }
+    
+    
     func recognizeTextHandler(request: VNRequest, error: Error?) {
         guard let resultsViewController = self.resultsViewController else {
             print("resultsViewController is not set")
@@ -173,13 +189,14 @@ extension ListViewController: UIImagePickerControllerDelegate & UINavigationCont
 extension ListViewController: CameraViewControllerDelegate {
     
     func proceedFromCamera(image: UIImage?) {
+       
         let vcID = ListViewController.resultsContentsIdentifier
             resultsViewController = storyboard?.instantiateViewController(withIdentifier: vcID) as? ResultsViewController
              
         if let resultsVC = self.resultsViewController {
             resultsVC.image = image
         }
-        self.processImage(image: image)
+        self.processImageFromCam(image: image)
         
         DispatchQueue.main.async {
             if let resultsVC = self.resultsViewController {
