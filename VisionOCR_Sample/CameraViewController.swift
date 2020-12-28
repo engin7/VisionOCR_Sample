@@ -38,7 +38,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var maskLayer = CAShapeLayer()
     // Layer into which to draw bounding box paths.
     var pathLayer: CALayer?
-    
+    var rootLayer: CALayer?
+
     // MARK: Make VNDetectBarcodesRequest variable
 
     lazy var detectBarcodeRequest = VNDetectBarcodesRequest { request, error in
@@ -51,6 +52,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
       self.processClassification(request)
     }
+    
+    // MARK: Make VNRecognizeTextRequest variable
+
+    lazy var detectRectangleRequest =  VNRecognizeTextRequest { request, error in
+        guard error == nil else {
+          self.showAlert(
+            withTitle: "Barcode error",
+            message: error?.localizedDescription ?? "error")
+          return
+        }
+        // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
+        self.processClassification(request)
+      }
+
     
     // MARK: Taking Photo
     @IBAction func didTakePhoto(_ sender: Any) {
@@ -96,6 +111,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBAction func closeButtonPressed(_ sender: Any) {
         defaults.set(selectedFlashMode.rawValue, forKey: CameraViewController.userDefaultsIdentifier)
         dismiss(animated: true, completion: nil)
+    }
+    
+    func addDocumentScannerOverley() {
+         
+        if let previewRootLayer = self.previewView?.layer {
+            self.rootLayer = previewRootLayer
+      
+            var redBoxes = [CGRect]()
+            
+            
+
+            
+        
+        }
     }
     
     private enum FlashPhotoMode: Int {
@@ -744,6 +773,7 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             case 2:
                 print(index) //document
                 documentMode = true
+                addDocumentScannerOverley()
             case 3:
                 // face detection
                 faceView.isHidden = false
@@ -782,7 +812,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
       return
     }
-      
+      // UPDATA for rectangles!!
+    
     if barcodeMode {
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: imageBuffer,
