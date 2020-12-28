@@ -115,6 +115,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZHH-pq-4qU" customClass="BarcodeView" customModule="VisionOCR_Sample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xyH-wl-2w8">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
@@ -239,6 +243,7 @@
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="trailing" secondItem="bsz-di-FHK" secondAttribute="trailing" id="8Mo-b0-9Tm"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="nVM-GE-rdn" secondAttribute="trailing" constant="8" id="A0j-Pq-dFF"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="Dgu-ye-esd"/>
+                            <constraint firstItem="ZHH-pq-4qU" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="G5H-lZ-aRn"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" id="HDk-VZ-tym"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="PXr-6K-vp5"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="Q5q-Me-SfW"/>
@@ -250,8 +255,11 @@
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
+                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="ZHH-pq-4qU" secondAttribute="bottom" id="n35-II-6V8"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="ZHH-pq-4qU" secondAttribute="trailing" id="n6O-Ku-hPc"/>
                             <constraint firstItem="nVM-GE-rdn" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="ohX-pj-6v5"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="osc-QE-utc"/>
+                            <constraint firstItem="ZHH-pq-4qU" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="qaF-Dk-8v2"/>
                             <constraint firstItem="gtq-Cq-Bwb" firstAttribute="centerY" secondItem="0DI-8s-fNv" secondAttribute="centerY" id="tRZ-65-jnf"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="8" id="u8z-Pe-EZq"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="dnR-rr-mPG" secondAttribute="bottom" id="uJd-UQ-XBs"/>
@@ -261,6 +269,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Oct-Xl-KxT"/>
                     <connections>
+                        <outlet property="barcodeView" destination="ZHH-pq-4qU" id="3tX-DI-M8k"/>
                         <outlet property="captureImageView" destination="OgZ-Ua-Rj5" id="N04-x2-DL7"/>
                         <outlet property="faceView" destination="dnR-rr-mPG" id="ewC-qL-YoR"/>
                         <outlet property="flashButton" destination="nVM-GE-rdn" id="CJy-jz-mB1"/>

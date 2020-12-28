@@ -12,7 +12,9 @@ protocol RecognizedTextDataSource: AnyObject {
     func addRecognizedText(recognizedText: [VNRecognizedTextObservation])
 }
 
-class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+
+
+class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CameraViewControllerDelegate {
    
     static let resultsContentsIdentifier = "resultsVC"
     static let collectionViewReuseIdentifier = "Cell"
@@ -28,12 +30,14 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
     var resultsViewController: ResultsViewController?
     var scannedItems:[ScannedItem] = []
     var lastFlashMode = UIImage(systemName: "bolt.badge.a")!
-
+    var cameraVC:CameraViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         picker.delegate = self
         picker.sourceType = .photoLibrary
+        
         
         textRecognitionRequest = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
         textRecognitionRequest.recognitionLevel = .accurate
@@ -74,6 +78,13 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
         }
     }
+    // just before segue to camera
+        override  func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if type(of:segue.destination) == type(of:CameraViewController()) {
+                cameraVC = segue.destination as? CameraViewController
+                cameraVC?.delegate = self
+            }
+        }
     
     // MARK: - VNImageRequestHandler
     func processImage(image: UIImage?) {

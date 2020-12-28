@@ -9,7 +9,13 @@ import UIKit
 import AVFoundation
 import Vision
 
+protocol CameraViewControllerDelegate: class {
+    func processImage(image: UIImage?)
+}
+
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+
+    weak var delegate: CameraViewControllerDelegate?
 
     private static let userDefaultsIdentifier = "flash"
     private static let collectionViewReuseIdentifier = "Cell"
@@ -19,9 +25,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var modeCollectionView: UICollectionView!
     @IBOutlet weak var flashButton: UIButton!
     
+    @IBOutlet weak var barcodeView: BarcodeView!
     @IBOutlet var faceView: FaceView!
     @IBOutlet var pitchView: PitchView!
     private var barcodeMode = false
+    private var documentMode = false
+
     
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
@@ -42,9 +51,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
       self.processClassification(request)
     }
-
     
     @IBAction func didTakePhoto(_ sender: Any) {
+        
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         switch  selectedFlashMode {
         case .on:
@@ -54,7 +63,19 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         default:
             settings.flashMode = .auto
         }
-        stillImageOutput.capturePhoto(with: settings, delegate: self)
+        if !documentMode && !barcodeMode {
+            stillImageOutput.capturePhoto(with: settings, delegate: self)
+        }
+        
+        if documentMode {
+            // show rectangle for the document edges.
+            stillImageOutput.capturePhoto(with: settings, delegate: self)
+            let image = captureImageView.image
+            delegate?.processImage(image: image)
+            
+        }
+        
+        
      }
      
     @IBAction func changeCameraButtonPressed(_ sender: Any) {
@@ -629,11 +650,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK: - Vision Barcode scan
     func processClassification(_ request: VNRequest) {
       // TODO: Main logic
+        barcodeView.clear()
+        defer {
+          DispatchQueue.main.async { [self] in
+            self.barcodeView.setNeedsDisplay()
+          }
+        }
       // 1 get a list of potential barcodes from the request
       guard let barcodes = request.results else { return }
       DispatchQueue.main.async { [self] in
         if captureSession.isRunning {
-//          view.layer.sublayers?.removeSubrange(1...)
 
           // 2 Loop through the potential barcodes to analyze each one individually.
           for barcode in barcodes {
@@ -643,15 +669,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
               let potentialQRCode = barcode as? VNBarcodeObservation,
               potentialQRCode.confidence > 0.9
               else { return }
-            addLayer()
+           
             // Perform drawing on the main thread.
             DispatchQueue.main.async {
-                guard let drawLayer = self.pathLayer,
-                      let results = request.results as? [VNBarcodeObservation] else {
+                guard let result = barcode as? VNBarcodeObservation else {
                         return
                 }
-                self.draw(barcodes: results, onImageWithBounds: drawLayer.bounds)
-                drawLayer.setNeedsDisplay()
+                 
+                let box = result.boundingBox
+                barcodeView.boundingBox = convert(rect: box)
+                  
             }
             
             // 3 if one of the results happens to be a barcode, you show an alert with the barcode type and the string encoded in the barcode.
@@ -659,6 +686,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
               withTitle: potentialQRCode.payloadStringValue ?? "",
               // TODO: Check the confidence score
               message: String(potentialQRCode.confidence))
+                 
           }
        
             
@@ -667,21 +695,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
       
     }
-    
-    func addLayer() {
-        // Remove previous paths & image
-        pathLayer?.removeFromSuperlayer()
-        pathLayer = nil
-        let drawingLayer = CALayer()
-        drawingLayer.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
-        drawingLayer.anchorPoint = CGPoint.zero
-        drawingLayer.position = CGPoint(x: 0, y: 0)
-        drawingLayer.opacity = 0.5
-        pathLayer = drawingLayer
-        self.view.layer.addSublayer(pathLayer!)
-    }
-}
  
+}
+    //MARK: - CollectionView DataSource & Delegate
+
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
      
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -712,17 +729,21 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             // update to change modes
             
+            barcodeView.isHidden = true
             faceView.isHidden = true
             pitchView.isHidden = true
             barcodeMode = false
-
+            documentMode = false
+            
             switch index {
             case 1:
                 print(index) //barcode
                 barcodeMode = true
+                barcodeView.isHidden = false
                 configureCaptureSession()
             case 2:
                 print(index) //document
+                documentMode = true
             case 3:
                 // face detection
                 faceView.isHidden = false
