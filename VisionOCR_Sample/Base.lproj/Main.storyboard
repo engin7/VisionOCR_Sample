@@ -14,7 +14,7 @@
         <!--Scanned Elements-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ListViewController" customModule="VisionOCR_Sample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ListViewController" id="BYZ-38-t0r" customClass="ListViewController" customModule="VisionOCR_Sample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -232,6 +232,9 @@
                                     <action selector="changeCameraButtonPressed:" destination="wKK-1L-4Vu" eventType="touchUpInside" id="duN-6e-AGv"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ICw-wP-oVj">
+                                <rect key="frame" x="188.66666666666666" y="349.66666666666669" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bsz-di-FHK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -248,6 +251,7 @@
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="PXr-6K-vp5"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="Q5q-Me-SfW"/>
                             <constraint firstItem="dnR-rr-mPG" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="QEr-lz-whx"/>
+                            <constraint firstItem="ICw-wP-oVj" firstAttribute="centerY" secondItem="25A-y7-uar" secondAttribute="centerY" id="Qia-Ye-Ygv"/>
                             <constraint firstItem="gtq-Cq-Bwb" firstAttribute="centerX" secondItem="25A-y7-uar" secondAttribute="centerX" id="T8Y-gw-6hF"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="dnR-rr-mPG" secondAttribute="trailing" id="Vnd-fo-H86"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="trailing" secondItem="25A-y7-uar" secondAttribute="trailing" id="Vxo-XA-Kt3"/>
@@ -264,11 +268,13 @@
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="8" id="u8z-Pe-EZq"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="dnR-rr-mPG" secondAttribute="bottom" id="uJd-UQ-XBs"/>
                             <constraint firstItem="dnR-rr-mPG" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="weq-jM-sRJ"/>
+                            <constraint firstItem="ICw-wP-oVj" firstAttribute="centerX" secondItem="25A-y7-uar" secondAttribute="centerX" id="x9T-0J-5j2"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="zlx-f7-JU4" secondAttribute="trailing" constant="20" id="ytE-M5-NO4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Oct-Xl-KxT"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="ICw-wP-oVj" id="XrW-K4-CFS"/>
                         <outlet property="barcodeView" destination="ZHH-pq-4qU" id="3tX-DI-M8k"/>
                         <outlet property="captureImageView" destination="OgZ-Ua-Rj5" id="N04-x2-DL7"/>
                         <outlet property="faceView" destination="dnR-rr-mPG" id="ewC-qL-YoR"/>

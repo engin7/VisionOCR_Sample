@@ -10,7 +10,7 @@ import AVFoundation
 import Vision
 
 protocol CameraViewControllerDelegate: class {
-    func processImage(image: UIImage?)
+    func proceedFromCamera(image: UIImage?)
 }
 
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
@@ -20,6 +20,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private static let userDefaultsIdentifier = "flash"
     private static let collectionViewReuseIdentifier = "Cell"
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var captureImageView: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
@@ -31,7 +32,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private var barcodeMode = false
     private var documentMode = false
 
-    
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
     
@@ -52,7 +52,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       self.processClassification(request)
     }
     
+    // MARK: Taking Photo
     @IBAction func didTakePhoto(_ sender: Any) {
+        
+        if documentMode {
+            //TODO: show rectangle for the document edges. before capturing
+            self.activityIndicator.startAnimating()
+        }
         
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         switch  selectedFlashMode {
@@ -63,19 +69,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         default:
             settings.flashMode = .auto
         }
-        if !documentMode && !barcodeMode {
+        if !barcodeMode {
             stillImageOutput.capturePhoto(with: settings, delegate: self)
         }
-        
-        if documentMode {
-            // show rectangle for the document edges.
-            stillImageOutput.capturePhoto(with: settings, delegate: self)
-            let image = captureImageView.image
-            delegate?.processImage(image: image)
-            
-        }
-        
-        
+         
      }
      
     @IBAction func changeCameraButtonPressed(_ sender: Any) {
@@ -408,8 +405,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation()
             else { return }
-        let image = UIImage(data: imageData)
-        captureImageView.image = image
+        let capturedImage = UIImage(data: imageData)
+        if documentMode {
+            delegate?.proceedFromCamera(image: capturedImage)
+            dismiss(animated: true, completion: nil)
+        }
+        captureImageView.image = capturedImage
     }
      
     // MARK: - Bounding box drawing

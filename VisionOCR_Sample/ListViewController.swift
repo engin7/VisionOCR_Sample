@@ -14,7 +14,7 @@ protocol RecognizedTextDataSource: AnyObject {
 
 
 
-class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CameraViewControllerDelegate {
+class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
    
     static let resultsContentsIdentifier = "resultsVC"
     static let collectionViewReuseIdentifier = "Cell"
@@ -137,11 +137,10 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: height)
     }
 }
-
 // MARK: - Image from Library
 
 extension ListViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
+     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         let vcID = ListViewController.resultsContentsIdentifier
@@ -169,5 +168,23 @@ extension ListViewController: UIImagePickerControllerDelegate & UINavigationCont
         picker.dismiss(animated: true, completion: nil)
         
         }
+}
+
+extension ListViewController: CameraViewControllerDelegate {
     
+    func proceedFromCamera(image: UIImage?) {
+        let vcID = ListViewController.resultsContentsIdentifier
+            resultsViewController = storyboard?.instantiateViewController(withIdentifier: vcID) as? ResultsViewController
+             
+        if let resultsVC = self.resultsViewController {
+            resultsVC.image = image
+        }
+        self.processImage(image: image)
+        
+        DispatchQueue.main.async {
+            if let resultsVC = self.resultsViewController {
+                self.navigationController?.pushViewController(resultsVC, animated: true)
+            }
+         }
+    }
 }
