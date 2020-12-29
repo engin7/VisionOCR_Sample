@@ -25,6 +25,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var modeCollectionView: UICollectionView!
     @IBOutlet weak var flashButton: UIButton!
+    @IBOutlet weak var captureButton: UIButton!
     
     @IBOutlet weak var barcodeView: BarcodeView!
     @IBOutlet var faceView: FaceView!
@@ -89,7 +90,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         default:
             settings.flashMode = .auto
         }
-        if !barcodeMode {
+        if defaultMode || documentMode {
+            // only capture normal photo in default mode or doc. do not in other modes
             stillImageOutput.capturePhoto(with: settings, delegate: self)
         }
          
@@ -690,31 +692,39 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             switch index {
             case 1:
+                captureButton.isHidden = false
                 defaultMode = false
                 barcodeMode = true
                 barcodeView.isHidden = false
                 configureCaptureSession()
             case 2:
-                defaultMode = false
+                captureButton.isHidden = false
                 documentMode = true
                 documentView.isHidden = false
-                configureCaptureSession()
-            case 3:
-                // face detection
-                configureCaptureSession()
-                defaultMode = false
-                faceView.isHidden = false
-            case 4:
-                // face orientation
-                configureCaptureSession()
-                defaultMode = false
-                pitchView.isHidden = false
-            default:
-                // regular camera
                 if !defaultMode {
                     configurePhotoSession()
                     defaultMode = true
                 }
+            case 3:
+                // face detection
+                defaultMode = false
+                configureCaptureSession()
+                faceView.isHidden = false
+                captureButton.isHidden = true
+            case 4:
+                // face orientation
+                defaultMode = false
+                configureCaptureSession()
+                pitchView.isHidden = false
+                captureButton.isHidden = true
+            default:
+                // regular camera
+                captureButton.isHidden = false
+                if !defaultMode {
+                    configurePhotoSession()
+                    defaultMode = true
+                }
+                
             }
              
             // add overlay run delegate method

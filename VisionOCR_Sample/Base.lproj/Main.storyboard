@@ -284,6 +284,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="ICw-wP-oVj" id="XrW-K4-CFS"/>
                         <outlet property="barcodeView" destination="ZHH-pq-4qU" id="3tX-DI-M8k"/>
+                        <outlet property="captureButton" destination="gtq-Cq-Bwb" id="WYT-v9-Jtv"/>
                         <outlet property="captureImageView" destination="OgZ-Ua-Rj5" id="N04-x2-DL7"/>
                         <outlet property="documentView" destination="fqm-7G-JaR" id="KHZ-oc-aiG"/>
                         <outlet property="faceView" destination="dnR-rr-mPG" id="ewC-qL-YoR"/>
