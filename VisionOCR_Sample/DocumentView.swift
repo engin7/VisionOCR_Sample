@@ -38,9 +38,10 @@ class DocumentView: UIView {
         // Add a path describing the bounding box to the context.
         context.addRect(boundingBox)
 
-        // use red color
-        UIColor.red.setStroke()
-
+        // use gray color
+        context.setStrokeColor(gray: 0.6, alpha: 0.6)
+        context.setLineWidth(15.0)
+        
         // draw path .addRect
         context.strokePath()
          

@@ -201,55 +201,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         captureSession.addInput(deviceInput)
 
     }
-    
-    // MARK: Barcode Reader
-    
-    // MARK: - Path-Drawing
-    
-    fileprivate func boundingBox(forRegionOfInterest: CGRect, withinImageBounds bounds: CGRect) -> CGRect {
-        
-        let imageWidth = bounds.width
-        let imageHeight = bounds.height
-        
-        // Begin with input rect.
-        var rect = forRegionOfInterest
-        
-        // Reposition origin.
-        rect.origin.x *= imageWidth
-        rect.origin.x += bounds.origin.x
-        rect.origin.y = (1 - rect.origin.y) * imageHeight + bounds.origin.y
-        
-        // Rescale normalized coordinates.
-        rect.size.width *= imageWidth
-        rect.size.height *= imageHeight
-        
-        return rect
-    }
-    
-    fileprivate func shapeLayer(color: UIColor, frame: CGRect) -> CAShapeLayer {
-        // Create a new layer.
-        let layer = CAShapeLayer()
-        
-        // Configure layer's appearance.
-        layer.fillColor = nil // No fill to show boxed object
-        layer.shadowOpacity = 0
-        layer.shadowRadius = 0
-        layer.borderWidth = 2
-        
-        // Vary the line color according to input.
-        layer.borderColor = color.cgColor
-        
-        // Locate the layer.
-        layer.anchorPoint = .zero
-        layer.frame = frame
-        layer.masksToBounds = true
-        
-        // Transform the layer to have same coordinate system as the imageView underneath it.
-        layer.transform = CATransform3DMakeScale(1, -1, 1)
-        
-        return layer
-    }
  
+    
     /// Create new capture device with requested position
     fileprivate func captureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
 
@@ -407,8 +360,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         flashButton.setImage(image, for: UIControl.State.normal)
     }
-
-    
+ 
     // The AVCapturePhotoOutput will deliver the captured photo to the assigned delegate which is our current ViewController by a delegate method called photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?). The photo is delivered to us as an AVCapturePhoto which is easy to transform into Data/NSData and than into UIImage.
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -422,46 +374,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         captureImageView.image = capturedImage
     }
      
-    // MARK: - Bounding box drawing
-    
-    // Draw a box on screen. Must be called from main queue.
-    var boxLayer = [CAShapeLayer]()
-    func draw(rect: CGRect, color: CGColor) {
-        let layer = CAShapeLayer()
-        layer.opacity = 0.5
-        layer.borderColor = color
-        layer.borderWidth = 1
-        layer.frame = rect
-        boxLayer.append(layer)
-        videoPreviewLayer.insertSublayer(layer, at: 1)
-    }
-    
-    // Remove all drawn boxes. Must be called on main queue.
-    func removeBoxes() {
-        for layer in boxLayer {
-            layer.removeFromSuperlayer()
-        }
-        boxLayer.removeAll()
-    }
-    
-    typealias ColoredBoxGroup = (color: CGColor, boxes: [CGRect])
-    
-    // Draws groups of colored boxes.
-    func show(boxGroups: [ColoredBoxGroup]) {
-        DispatchQueue.main.async {
-            let layer = self.videoPreviewLayer
-            self.removeBoxes()
-            for boxGroup in boxGroups {
-                let color = boxGroup.color
-                for box in boxGroup.boxes {
-                    if let rect = layer?.layerRectConverted(fromMetadataOutputRect: box.applying(self.visionToAVFTransform)) {
-                        self.draw(rect: rect, color: color)
-                    }
-                }
-            }
-        }
-    }
-
+ 
     // if you also use back camera convert
     func convert(rect: CGRect) -> CGRect {
         // 1 Calculates the location of the opposite corner to the origin of the rectangle.
@@ -672,7 +585,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
   
               // Perform drawing on the main thread.
               DispatchQueue.main.async {
-                  guard let result = rect as? VNRectangleObservation else {
+                  guard let result = rect as? VNRectangleObservation,
+                        result.confidence > 0.9 else {
                           return
                   }
                    
