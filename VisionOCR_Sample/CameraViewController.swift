@@ -29,6 +29,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var barcodeView: BarcodeView!
     @IBOutlet var faceView: FaceView!
     @IBOutlet var pitchView: PitchView!
+    @IBOutlet weak var documentView: DocumentView!
+    
     private var barcodeMode = false
     private var documentMode = false
 
@@ -38,7 +40,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     var maskLayer = CAShapeLayer()
     // Layer into which to draw bounding box paths.
     var pathLayer: CALayer?
-    var rootLayer: CALayer?
+    private var detectionOverlay: CALayer! = nil
 
     // MARK: Make VNDetectBarcodesRequest variable
 
@@ -55,17 +57,19 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // MARK: Make VNRecognizeTextRequest variable
 
-    lazy var detectRectangleRequest =  VNRecognizeTextRequest { request, error in
-        guard error == nil else {
-          self.showAlert(
-            withTitle: "Barcode error",
-            message: error?.localizedDescription ?? "error")
-          return
-        }
-        // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
-        self.processClassification(request)
+    /// - Tag: ConfigureCompletionHandler
+    
+    lazy var rectangleDetectionRequest = VNDetectRectanglesRequest { request, error in
+      guard error == nil else {
+        self.showAlert(
+          withTitle: "Rect error",
+          message: error?.localizedDescription ?? "error")
+        return
       }
-
+      // When the method thinks it found a rect, it’ll pass the barcode on to process(_:)
+      self.processRect(request)
+    }
+     
     
     // MARK: Taking Photo
     @IBAction func didTakePhoto(_ sender: Any) {
@@ -115,16 +119,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     func addDocumentScannerOverley() {
          
-        if let previewRootLayer = self.previewView?.layer {
-            self.rootLayer = previewRootLayer
-      
-            var redBoxes = [CGRect]()
-            
-            
-
-            
-        
-        }
     }
     
     private enum FlashPhotoMode: Int {
@@ -255,20 +249,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         return layer
     }
-    
-    // Barcodes are ORANGE.
-    fileprivate func draw(barcodes: [VNBarcodeObservation], onImageWithBounds bounds: CGRect) {
-        CATransaction.begin()
-        for observation in barcodes {
-            let barcodeBox = boundingBox(forRegionOfInterest: observation.boundingBox, withinImageBounds: bounds)
-            let barcodeLayer = shapeLayer(color: .orange, frame: barcodeBox)
-            
-            // Add to pathLayer on top of image.
-            pathLayer?.addSublayer(barcodeLayer)
-        }
-        CATransaction.commit()
-    }
-  
+ 
     /// Create new capture device with requested position
     fileprivate func captureDevice(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
 
@@ -676,6 +657,37 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       }
     }
     
+    // MARK: - Vision Rect scan
+    func processRect(_ request: VNRequest) {
+        documentView.clear()
+        defer {
+          DispatchQueue.main.async { [self] in
+            self.documentView.setNeedsDisplay()
+          }
+        }
+        
+        guard let rect = request.results?.first else { return }
+        DispatchQueue.main.async { [self] in
+          if captureSession.isRunning {
+  
+              // Perform drawing on the main thread.
+              DispatchQueue.main.async {
+                  guard let result = rect as? VNRectangleObservation else {
+                          return
+                  }
+                   
+                  let box = result.boundingBox
+                documentView.boundingBox = convert(rect: box)
+                    
+              }
+          
+          }
+        }
+        
+    }
+    
+    
+    
     // MARK: - Vision Barcode scan
     func processClassification(_ request: VNRequest) {
       // TODO: Main logic
@@ -761,6 +773,7 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             barcodeView.isHidden = true
             faceView.isHidden = true
             pitchView.isHidden = true
+            documentView.isHidden = true
             barcodeMode = false
             documentMode = false
             
@@ -773,6 +786,8 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             case 2:
                 print(index) //document
                 documentMode = true
+                documentView.isHidden = false
+                configureCaptureSession()
                 addDocumentScannerOverley()
             case 3:
                 // face detection
@@ -822,6 +837,16 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         // 3 Perform the detectBarcodeRequest using the handler.
         do {
           try imageRequestHandler.perform([detectBarcodeRequest])
+        } catch {
+          print(error)
+        }
+    } else if documentMode {
+        let imageRequestHandler = VNImageRequestHandler(
+          cvPixelBuffer: imageBuffer,
+          orientation: .right)
+        // 3 Perform the detectBarcodeRequest using the handler.
+        do {
+          try imageRequestHandler.perform([rectangleDetectionRequest])
         } catch {
           print(error)
         }

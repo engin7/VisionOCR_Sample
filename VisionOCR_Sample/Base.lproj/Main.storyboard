@@ -115,13 +115,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZHH-pq-4qU" customClass="BarcodeView" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xyH-wl-2w8">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqm-7G-JaR" customClass="DocumentView" customModule="VisionOCR_Sample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZHH-pq-4qU" customClass="BarcodeView" customModule="VisionOCR_Sample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fOG-qP-agM" customClass="PitchView" customModule="VisionOCR_Sample" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
@@ -243,6 +247,7 @@
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" constant="50" id="0EL-OT-nSs"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="40" id="2Qw-gE-Vc3"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="2y7-n1-wcg"/>
+                            <constraint firstItem="fqm-7G-JaR" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="3sc-1P-9xz"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="trailing" secondItem="bsz-di-FHK" secondAttribute="trailing" id="8Mo-b0-9Tm"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="nVM-GE-rdn" secondAttribute="trailing" constant="8" id="A0j-Pq-dFF"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="Dgu-ye-esd"/>
@@ -255,10 +260,13 @@
                             <constraint firstItem="gtq-Cq-Bwb" firstAttribute="centerX" secondItem="25A-y7-uar" secondAttribute="centerX" id="T8Y-gw-6hF"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="dnR-rr-mPG" secondAttribute="trailing" id="Vnd-fo-H86"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="trailing" secondItem="25A-y7-uar" secondAttribute="trailing" id="Vxo-XA-Kt3"/>
+                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="fqm-7G-JaR" secondAttribute="bottom" id="ZQa-cX-hWS"/>
                             <constraint firstAttribute="bottom" secondItem="0DI-8s-fNv" secondAttribute="bottom" id="avX-1v-rqb"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
+                            <constraint firstAttribute="trailing" secondItem="fqm-7G-JaR" secondAttribute="trailing" id="j6a-CH-haA"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
+                            <constraint firstItem="fqm-7G-JaR" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="kQs-CG-m2h"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="ZHH-pq-4qU" secondAttribute="bottom" id="n35-II-6V8"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="ZHH-pq-4qU" secondAttribute="trailing" id="n6O-Ku-hPc"/>
                             <constraint firstItem="nVM-GE-rdn" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="ohX-pj-6v5"/>
@@ -277,6 +285,7 @@
                         <outlet property="activityIndicator" destination="ICw-wP-oVj" id="XrW-K4-CFS"/>
                         <outlet property="barcodeView" destination="ZHH-pq-4qU" id="3tX-DI-M8k"/>
                         <outlet property="captureImageView" destination="OgZ-Ua-Rj5" id="N04-x2-DL7"/>
+                        <outlet property="documentView" destination="fqm-7G-JaR" id="KHZ-oc-aiG"/>
                         <outlet property="faceView" destination="dnR-rr-mPG" id="ewC-qL-YoR"/>
                         <outlet property="flashButton" destination="nVM-GE-rdn" id="CJy-jz-mB1"/>
                         <outlet property="modeCollectionView" destination="0DI-8s-fNv" id="ev2-bC-HyS"/>
