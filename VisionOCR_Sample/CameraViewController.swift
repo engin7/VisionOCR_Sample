@@ -699,12 +699,9 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
                 configureCaptureSession()
             case 2:
                 captureButton.isHidden = false
-                documentMode = true
                 documentView.isHidden = false
-                if !defaultMode {
-                    configurePhotoSession()
-                    defaultMode = true
-                }
+                documentMode = true
+                configureCaptureSession()
             case 3:
                 // face detection
                 defaultMode = false

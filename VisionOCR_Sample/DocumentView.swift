@@ -39,9 +39,10 @@ class DocumentView: UIView {
         context.addRect(boundingBox)
 
         // use gray color
-        context.setStrokeColor(gray: 0.6, alpha: 0.6)
-        context.setLineWidth(15.0)
-        
+        context.setStrokeColor(gray: 0.8, alpha: 0.8)
+        context.setLineWidth(10.0)
+        context.setFillColor(gray: 0.6, alpha: 0.4)
+        context.fill(boundingBox)
         // draw path .addRect
         context.strokePath()
          
