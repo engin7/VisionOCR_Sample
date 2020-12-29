@@ -31,6 +31,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet var pitchView: PitchView!
     @IBOutlet weak var documentView: DocumentView!
     
+    private var defaultMode = true
     private var barcodeMode = false
     private var documentMode = false
 
@@ -116,11 +117,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         defaults.set(selectedFlashMode.rawValue, forKey: CameraViewController.userDefaultsIdentifier)
         dismiss(animated: true, completion: nil)
     }
-    
-    func addDocumentScannerOverley() {
-         
-    }
-    
+ 
     private enum FlashPhotoMode: Int {
         case auto = 0,on,off
     }
@@ -693,27 +690,31 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             
             switch index {
             case 1:
-                print(index) //barcode
+                defaultMode = false
                 barcodeMode = true
                 barcodeView.isHidden = false
                 configureCaptureSession()
             case 2:
-                print(index) //document
+                defaultMode = false
                 documentMode = true
                 documentView.isHidden = false
                 configureCaptureSession()
-                addDocumentScannerOverley()
             case 3:
                 // face detection
-                faceView.isHidden = false
                 configureCaptureSession()
+                defaultMode = false
+                faceView.isHidden = false
             case 4:
                 // face orientation
-                pitchView.isHidden = false
                 configureCaptureSession()
+                defaultMode = false
+                pitchView.isHidden = false
             default:
                 // regular camera
-                configurePhotoSession()
+                if !defaultMode {
+                    configurePhotoSession()
+                    defaultMode = true
+                }
             }
              
             // add overlay run delegate method
@@ -746,7 +747,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     if barcodeMode {
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: imageBuffer,
-          orientation: .right)
+          orientation: orientation)
 
         // 3 Perform the detectBarcodeRequest using the handler.
         do {
@@ -757,7 +758,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     } else if documentMode {
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: imageBuffer,
-          orientation: .right)
+          orientation: orientation)
         // 3 Perform the detectBarcodeRequest using the handler.
         do {
           try imageRequestHandler.perform([rectangleDetectionRequest])

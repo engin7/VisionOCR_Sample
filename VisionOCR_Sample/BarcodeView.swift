@@ -37,7 +37,7 @@ class BarcodeView: UIView {
    
         // Add a path describing the bounding box to the context.
         context.addRect(boundingBox)
-
+        context.setLineWidth(9.0)
         // use red color
         UIColor.red.setStroke()
 
