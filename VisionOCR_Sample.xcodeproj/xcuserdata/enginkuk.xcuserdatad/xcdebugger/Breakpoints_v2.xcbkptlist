@@ -14,8 +14,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
             landmarkName = "swapCamera()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,9 +30,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "717"
-            endingLineNumber = "717"
-            landmarkName = "collectionView(_:didSelectItemAt:)"
+            startingLineNumber = "666"
+            endingLineNumber = "666"
+            landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -46,9 +46,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "570"
-            endingLineNumber = "570"
-            landmarkName = "showAlert(withTitle:message:)"
+            startingLineNumber = "523"
+            endingLineNumber = "523"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,9 +62,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
-            landmarkName = "showAlert(withTitle:message:)"
+            startingLineNumber = "518"
+            endingLineNumber = "518"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -103,22 +103,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0D337AF5-3F5A-48E5-95E3-694BD5DF15C1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VisionOCR_Sample/BarcodeView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "draw(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "3EF38543-3BCC-418A-A750-9A2C1AB5257C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -126,9 +110,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "didTakePhoto(_:)"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "flashButtonPressed(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -142,8 +126,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "didTakePhoto(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,9 +206,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "368"
-            endingLineNumber = "368"
-            landmarkName = "photoOutput(_:didFinishProcessingPhoto:error:)"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "configureCaptureSession()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -270,8 +254,8 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "CameraViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -286,9 +270,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "758"
-            endingLineNumber = "758"
-            landmarkName = "captureOutput(_:didOutput:from:)"
+            startingLineNumber = "702"
+            endingLineNumber = "702"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -302,9 +286,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "753"
-            endingLineNumber = "753"
-            landmarkName = "captureOutput(_:didOutput:from:)"
+            startingLineNumber = "697"
+            endingLineNumber = "697"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -318,41 +302,9 @@
             filePath = "VisionOCR_Sample/DocumentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "draw(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "560C5F7C-0ED8-4B97-B529-CF406C1ADA56"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VisionOCR_Sample/CameraViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "593"
-            endingLineNumber = "593"
-            landmarkName = "processRect(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BBBC2AA8-FBC9-4A3C-9BE2-9CE9D0D91503"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VisionOCR_Sample/CameraViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
-            landmarkName = "processRect(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -366,9 +318,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "767"
-            endingLineNumber = "767"
-            landmarkName = "captureOutput(_:didOutput:from:)"
+            startingLineNumber = "711"
+            endingLineNumber = "711"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -382,9 +334,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "582"
-            endingLineNumber = "582"
-            landmarkName = "processRect(_:)"
+            startingLineNumber = "537"
+            endingLineNumber = "537"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -445,9 +397,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "581"
-            endingLineNumber = "581"
-            landmarkName = "processRect(_:)"
+            startingLineNumber = "536"
+            endingLineNumber = "536"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -461,9 +413,9 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "580"
-            endingLineNumber = "580"
-            landmarkName = "processRect(_:)"
+            startingLineNumber = "535"
+            endingLineNumber = "535"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -477,9 +429,89 @@
             filePath = "VisionOCR_Sample/CameraViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "573"
-            endingLineNumber = "573"
-            landmarkName = "processRect(_:)"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
+            landmarkName = "updatePitchView(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1A0F2760-D854-437E-B035-68D583678348"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VisionOCR_Sample/CameraViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "rectangleDetectionRequest"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "63E61679-07EA-4F99-8218-B40B2975B14C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VisionOCR_Sample/CameraViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "didTakePhoto(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "88FA02A7-2512-4E46-993D-5AA71C0B4548"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VisionOCR_Sample/CameraViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "didTakePhoto(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E0E6097C-0A1F-4739-92BE-88B52DDB0A58"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VisionOCR_Sample/CameraViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "548"
+            endingLineNumber = "548"
+            landmarkName = "detectedFace(request:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "885C68D7-8EE6-432E-AFAB-1A0425E85282"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VisionOCR_Sample/CameraViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "532"
+            endingLineNumber = "532"
+            landmarkName = "updatePitchView(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

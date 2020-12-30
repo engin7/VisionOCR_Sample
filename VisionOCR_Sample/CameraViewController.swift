@@ -571,13 +571,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // MARK: - Vision Rect scan
     func processRect(_ request: VNRequest) {
-        documentView.clear()
+        // call if moved phone
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.documentView.clear()
+        }
+        
         defer {
           DispatchQueue.main.async { [self] in
             self.documentView.setNeedsDisplay()
           }
         }
-        
         guard let rect = request.results?.first else { return }
         DispatchQueue.main.async { [self] in
           if captureSession.isRunning {
@@ -593,18 +596,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 documentView.boundingBox = convert(rect: box)
                     
               }
-          
           }
         }
-        
     }
-    
-    
-    
+     
     // MARK: - Vision Barcode scan
     func processClassification(_ request: VNRequest) {
       // TODO: Main logic
-        barcodeView.clear()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.barcodeView.clear()
+        }
         defer {
           DispatchQueue.main.async { [self] in
             self.barcodeView.setNeedsDisplay()
