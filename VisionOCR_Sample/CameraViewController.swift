@@ -32,7 +32,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet var pitchView: PitchView!
     @IBOutlet weak var documentView: DocumentView!
     
-    private var defaultMode = true
     private var barcodeMode = false
     private var documentMode = false
 
@@ -90,10 +89,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         default:
             settings.flashMode = .auto
         }
-        if defaultMode || documentMode {
-            // only capture normal photo in default mode or doc. do not in other modes
+         // only capture normal photo in default mode or doc. do not in other modes
             stillImageOutput.capturePhoto(with: settings, delegate: self)
-        }
+       
          
      }
      
@@ -157,7 +155,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Setup  Photo Camera:
-        configurePhotoSession()
+        configureCaptureSession()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -214,47 +213,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             }
         return nil
     }
-    
-    // put in didApper
-    func configurePhotoSession() {
-        // select input device
-        captureSession.stopRunning()
-        guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
-            else {
-                print("Unable to access back camera!")
-                return
-        }
-        //The AVCaptureDeviceInput will serve as the "middle man" to attach the input device, backCamera to the session.
-        do {
-            let input = try AVCaptureDeviceInput(device: backCamera)
-            // AVCapturePhotoOutput to help us attach the output to the session.
-            stillImageOutput = AVCapturePhotoOutput()
-            
-            // remove previous session inputs.
-            if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
-                for input in inputs {
-                    captureSession.removeInput(input)
-                }
-            }
-            // if there are no errors, then go ahead and add input add output to the Session.
-            if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
-                captureSession.addInput(input)
-                // remove previous session outputs.
-                 let outputs = captureSession.outputs
-                    for output in outputs {
-                        captureSession.removeOutput(output)
-                    }
-                
-                captureSession.addOutput(stillImageOutput)
-                setupLivePreview()
-            }
-        }
-        catch let error  {
-            print("Error Unable to initialize back camera:  \(error.localizedDescription)")
-        }
-    }
-    
-    
+     
     func configureCaptureSession() {
         
         captureSession.stopRunning()
@@ -286,6 +245,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         fatalError(error.localizedDescription)
       }
       
+        stillImageOutput = AVCapturePhotoOutput()
+        
       // Create the video data output
       let videoOutput = AVCaptureVideoDataOutput()
       videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
@@ -299,25 +260,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
      
         // Add the video output to the capture session
         captureSession.addOutput(videoOutput)
-      
+        captureSession.addOutput(stillImageOutput)
+        
       let videoConnection = videoOutput.connection(with: .video)
       videoConnection?.videoOrientation = .portrait
       
       // Configure the preview layer
-        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        videoPreviewLayer.videoGravity = .resizeAspectFill
-        videoPreviewLayer.frame = previewView.bounds
-        previewView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
-        previewView.layer.addSublayer(videoPreviewLayer)
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            // captureSession can block the UI
-            self.captureSession.startRunning()
-            DispatchQueue.main.async {
-                // setting UI elements should be on the main thread
-                self.videoPreviewLayer.frame = self.previewView.bounds
-            }
-        }
+        setupLivePreview()
         
     }
     
@@ -694,34 +643,23 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
             switch index {
             case 1:
                 captureButton.isHidden = false
-                defaultMode = false
                 barcodeMode = true
                 barcodeView.isHidden = false
-                configureCaptureSession()
             case 2:
                 captureButton.isHidden = false
                 documentView.isHidden = false
                 documentMode = true
-                configureCaptureSession()
             case 3:
                 // face detection
-                defaultMode = false
-                configureCaptureSession()
                 faceView.isHidden = false
                 captureButton.isHidden = true
             case 4:
                 // face orientation
-                defaultMode = false
-                configureCaptureSession()
                 pitchView.isHidden = false
                 captureButton.isHidden = true
             default:
                 // regular camera
                 captureButton.isHidden = false
-                if !defaultMode {
-                    configurePhotoSession()
-                    defaultMode = true
-                }
                 
             }
              
