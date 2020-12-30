@@ -52,6 +52,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
           message: error?.localizedDescription ?? "error")
         return
       }
+        self.barcodeView.clear()
       // When the method thinks it found a barcode, it’ll pass the barcode on to processClassification(_:)
       self.processClassification(request)
     }
@@ -60,15 +61,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     /// - Tag: ConfigureCompletionHandler
     
-    lazy var rectangleDetectionRequest = VNDetectRectanglesRequest { request, error in
+    lazy var rectangleDetectionRequest = VNDetectRectanglesRequest {  request, error in
       guard error == nil else {
         self.showAlert(
           withTitle: "Rect error",
           message: error?.localizedDescription ?? "error")
         return
       }
+        self.documentView.clear()
       // When the method thinks it found a rect, it’ll pass the barcode on to process(_:)
-      self.processRect(request)
+        self.processRect(request)
     }
      
     
@@ -521,40 +523,23 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK: - Vision Rect scan
     func processRect(_ request: VNRequest) {
         // call if moved phone
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.documentView.clear()
-        }
-        
         defer {
           DispatchQueue.main.async { [self] in
             self.documentView.setNeedsDisplay()
           }
         }
         guard let rect = request.results?.first else { return }
+        guard let result = rect as? VNRectangleObservation,
+                   result.confidence > 0.9 else { return }
         DispatchQueue.main.async { [self] in
-          if captureSession.isRunning {
-  
-              // Perform drawing on the main thread.
-              DispatchQueue.main.async {
-                  guard let result = rect as? VNRectangleObservation,
-                        result.confidence > 0.9 else {
-                          return
-                  }
-                   
-                  let box = result.boundingBox
+                let box = result.boundingBox
                 documentView.boundingBox = convert(rect: box)
-                    
-              }
-          }
         }
     }
      
     // MARK: - Vision Barcode scan
     func processClassification(_ request: VNRequest) {
       // TODO: Main logic
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.barcodeView.clear()
-        }
         defer {
           DispatchQueue.main.async { [self] in
             self.barcodeView.setNeedsDisplay()
@@ -572,19 +557,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
               // TODO: Check for QR Code symbology and confidence score
               let potentialQRCode = barcode as? VNBarcodeObservation,
               potentialQRCode.confidence > 0.9
-              else { return }
-           
-            // Perform drawing on the main thread.
-            DispatchQueue.main.async {
-                guard let result = barcode as? VNBarcodeObservation else {
-                        return
-                }
-                 
-                let box = result.boundingBox
+              else {  return  }
+ 
+              // Perform drawing on the main thread. 
+                let box = potentialQRCode.boundingBox
                 barcodeView.boundingBox = convert(rect: box)
-                  
-            }
-            
+             
             // 3 if one of the results happens to be a barcode, you show an alert with the barcode type and the string encoded in the barcode.
             showAlert(
               withTitle: potentialQRCode.payloadStringValue ?? "",
