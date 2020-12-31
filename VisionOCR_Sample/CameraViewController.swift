@@ -37,6 +37,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     private var resultsViewController: ResultsViewController?
     private var orientation:CGImagePropertyOrientation = .leftMirrored
+    private var documentBuffer: CVPixelBuffer?
+    private var documentRectangle: VNRectangleObservation?
+    private var documentImage: UIImage?
+    private var isTapped = false
+    
     
     var maskLayer = CAShapeLayer()
     // Layer into which to draw bounding box paths.
@@ -60,7 +65,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK: Make VNRecognizeTextRequest variable
 
     /// - Tag: ConfigureCompletionHandler
-    
+  
     lazy var rectangleDetectionRequest = VNDetectRectanglesRequest {  request, error in
       guard error == nil else {
         self.showAlert(
@@ -71,15 +76,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         self.documentView.clear()
       // When the method thinks it found a rect, it’ll pass the barcode on to process(_:)
         self.processRect(request)
-    }
-     
+        }
+    
     
     // MARK: Taking Photo
     @IBAction func didTakePhoto(_ sender: Any) {
         
         if documentMode {
-            //TODO: show rectangle for the document edges. before capturing
             self.activityIndicator.startAnimating()
+            self.isTapped = true
         }
         
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
@@ -132,18 +137,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private var flashMode: AVCaptureDevice.FlashMode = .auto
     private var defaults = UserDefaults.standard
         
-    // MARK: - Coordinate transforms
-    var bufferAspectRatio: Double!
-    // Transform from UI orientation to buffer orientation.
-    var uiRotationTransform = CGAffineTransform.identity
-    // Transform bottom-left coordinates to top-left.
-    var bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-    // Transform coordinates in ROI to global coordinates (still normalized).
-    var roiToGlobalTransform = CGAffineTransform.identity
-    
-    // Vision -> AVF coordinate transform.
-    var visionToAVFTransform = CGAffineTransform.identity
-    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
@@ -311,6 +304,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         flashButton.setImage(image, for: UIControl.State.normal)
     }
  
+    //MARK: - PhotoOutput AVCapturePhotoOutput
+    
     // The AVCapturePhotoOutput will deliver the captured photo to the assigned delegate which is our current ViewController by a delegate method called photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?). The photo is delivered to us as an AVCapturePhoto which is easy to transform into Data/NSData and than into UIImage.
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -318,7 +313,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             else { return }
         let capturedImage = UIImage(data: imageData)
         if documentMode {
-            delegate?.proceedFromCamera(image: capturedImage)
+            delegate?.proceedFromCamera(image: documentImage)
             dismiss(animated: true, completion: nil)
         }
         captureImageView.image = capturedImage
@@ -530,10 +525,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         guard let rect = request.results?.first else { return }
         guard let result = rect as? VNRectangleObservation,
-                   result.confidence > 0.9 else { return }
+                   result.confidence > 0.98 else { return }
+               
         DispatchQueue.main.async { [self] in
                 let box = result.boundingBox
-                documentView.boundingBox = convert(rect: box)
+           documentView.boundingBox = convert(rect: box)
+            if self.isTapped{
+                self.isTapped = false
+                documentImage = self.doPerspectiveCorrection(result, from:documentBuffer!)
+            }
         }
     }
      
@@ -666,13 +666,11 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
       return
     }
-      // UPDATA for rectangles!!
-    
+    documentBuffer = imageBuffer
     if barcodeMode {
         let imageRequestHandler = VNImageRequestHandler(
           cvPixelBuffer: imageBuffer,
           orientation: orientation)
-
         // 3 Perform the detectBarcodeRequest using the handler.
         do {
           try imageRequestHandler.perform([detectBarcodeRequest])
@@ -684,8 +682,9 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
           cvPixelBuffer: imageBuffer,
           orientation: orientation)
         // 3 Perform the detectBarcodeRequest using the handler.
+       
         do {
-          try imageRequestHandler.perform([rectangleDetectionRequest])
+        try imageRequestHandler.perform([rectangleDetectionRequest])
         } catch {
           print(error)
         }
@@ -706,3 +705,55 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
   }
 }
+
+extension CameraViewController {
+//MARK: - 1 The function doPerspectiveCorrection takes the Core Image from the buffer, converts its corners from the normalized to the image space, and applies the perspective correction filter on them to give us the image.
+
+func doPerspectiveCorrection(_ observation: VNRectangleObservation, from buffer: CVImageBuffer) -> UIImage {
+    // FIXME: Fix coordinate system
+    var ciImage: CIImage = CIImage(cvPixelBuffer: buffer)
+    var output = UIImage()
+    
+    
+    let topLeft = observation.topLeft.scaled(to: ciImage.extent.size)
+    let topRight = observation.topRight.scaled(to: ciImage.extent.size)
+    let bottomLeft = observation.bottomLeft.scaled(to: ciImage.extent.size)
+    let bottomRight = observation.bottomRight.scaled(to: ciImage.extent.size)
+
+    // pass those to the filter to extract/rectify the image
+    ciImage = ciImage.applyingFilter("CIPerspectiveCorrection", parameters: [
+        "inputTopLeft": CIVector(cgPoint: topLeft),
+        "inputTopRight": CIVector(cgPoint: topRight),
+        "inputBottomLeft": CIVector(cgPoint: bottomLeft),
+        "inputBottomRight": CIVector(cgPoint: bottomRight),
+    ])
+     
+            // The image doesn’t show in your album if you directly pass the CIImage into the UIImage initializer. Hence, it’s crucial that you convert the CIImage to a CGImage first, and then send it to the UIImage.
+            let context = CIContext()
+    if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+             output = UIImage(cgImage: cgImage)
+    }
+        
+            return output
+    }
+
+     }
+  
+extension CGPoint {
+       func scaled(to size: CGSize) -> CGPoint {
+           return CGPoint(x: self.x  * size.width,
+                          y: self.y * size.height)
+       }
+    }
+ 
+
+//
+//let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -self.previewView.frame.height)
+//let scale = CGAffineTransform.identity.scaledBy(x: self.previewView.frame.width, y: self.previewView.frame.height)
+//
+//let bounds = observation.boundingBox.applying(scale).applying(transform)
+//
+//let topLeft = CGPoint(x: bounds.minX, y: bounds.minY).scaled(to: ciImage.extent.size)
+//let topRight = CGPoint(x: bounds.maxX, y: bounds.minY).scaled(to: ciImage.extent.size)
+//let bottomLeft = CGPoint(x: bounds.minX, y: bounds.maxY).scaled(to: ciImage.extent.size)
+//let bottomRight = CGPoint(x: bounds.maxX, y: bounds.maxY).scaled(to: ciImage.extent.size)
