@@ -108,7 +108,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
             return
         }
         // image-request handler
-        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .right, options: [:])
+        let handler = VNImageRequestHandler(cgImage: cgImage)
         //  created new request to recognize text: var textRecognitionRequest = VNRecognizeTextRequest()
         do {
             try handler.perform([textRecognitionRequest]) // perform the request *accurate path is default
@@ -205,3 +205,4 @@ extension ListViewController: CameraViewControllerDelegate {
          }
     }
 }
+ 

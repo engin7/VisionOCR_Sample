@@ -132,7 +132,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private var selectedFlashMode = FlashPhotoMode.auto
     private var captureSession = AVCaptureSession()
     private var stillImageOutput: AVCapturePhotoOutput!
-    private var videoPreviewLayer: AVCaptureVideoPreviewLayer!
+    private lazy var videoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
     private var sequenceHandler = VNSequenceRequestHandler() // to detect sequence of photos
     private var flashMode: AVCaptureDevice.FlashMode = .auto
     private var defaults = UserDefaults.standard
@@ -318,8 +318,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         captureImageView.image = capturedImage
     }
-     
- 
+      
     // if you also use back camera convert
     func convert(rect: CGRect) -> CGRect {
         // 1 Calculates the location of the opposite corner to the origin of the rectangle.
@@ -332,6 +331,17 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // 3 Calculates the size by subtracting the two points.
         let size = (opp - origin).cgSize
         return CGRect(origin: origin, size: size)
+    }
+    
+    func drawBoundingBox(rect : CGRect) -> CGRect {
+    
+        let ratioY = self.view.frame.height / videoPreviewLayer.frame.height
+
+        let transform = CGAffineTransform(scaleX: 1, y: -1  * ratioY).translatedBy(x: 0, y: -self.videoPreviewLayer.frame.height * 0.85)
+        let scale = CGAffineTransform.identity.scaledBy(x: self.videoPreviewLayer.frame.width, y: self.videoPreviewLayer.frame.height)
+
+        let bounds = rect.applying(scale).applying(transform)
+        return bounds
     }
     
     // helper methods for face landmarks: Define a method which converts a landmark point to something that can be drawn on the screen.
@@ -529,10 +539,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                
         DispatchQueue.main.async { [self] in
                 let box = result.boundingBox
-           documentView.boundingBox = convert(rect: box)
+           documentView.boundingBox = drawBoundingBox(rect: box)
             if self.isTapped{
                 self.isTapped = false
                 documentImage = self.doPerspectiveCorrection(result, from:documentBuffer!)
+ 
             }
         }
     }
@@ -679,8 +690,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     } else if documentMode {
         let imageRequestHandler = VNImageRequestHandler(
-          cvPixelBuffer: imageBuffer,
-          orientation: orientation)
+          cvPixelBuffer: imageBuffer)
         // 3 Perform the detectBarcodeRequest using the handler.
        
         do {
@@ -746,14 +756,3 @@ extension CGPoint {
        }
     }
  
-
-//
-//let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -self.previewView.frame.height)
-//let scale = CGAffineTransform.identity.scaledBy(x: self.previewView.frame.width, y: self.previewView.frame.height)
-//
-//let bounds = observation.boundingBox.applying(scale).applying(transform)
-//
-//let topLeft = CGPoint(x: bounds.minX, y: bounds.minY).scaled(to: ciImage.extent.size)
-//let topRight = CGPoint(x: bounds.maxX, y: bounds.minY).scaled(to: ciImage.extent.size)
-//let bottomLeft = CGPoint(x: bounds.minX, y: bounds.maxY).scaled(to: ciImage.extent.size)
-//let bottomRight = CGPoint(x: bounds.maxX, y: bounds.maxY).scaled(to: ciImage.extent.size)
