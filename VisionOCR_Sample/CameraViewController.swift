@@ -462,9 +462,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       // compare pupils location to eye brows
       
       var focusY:  CGFloat = 0
-      let diff = avgY - eyebrowAvgY
-        
-      // FIXME - ADJUST FOR DIFFERENT PERSONS
+        let diff = (avgY - eyebrowAvgY) * (568 / UIScreen.main.bounds.height)
+  
+      // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
         
       if (diff < CGFloat(22)) && (diff > CGFloat(17)) {
         focusY = avgY // straight look
@@ -593,7 +593,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 extension CameraViewController: UICollectionViewDataSource, UICollectionViewDelegate {
      
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return 5 // will change
+            return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -608,6 +608,8 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
                 cell.cameraModesLabel.text = "Face Detection"
             case 4:
                 cell.cameraModesLabel.text = "Face Orientation"
+            case 5:
+                cell.cameraModesLabel.text = "Smile Detection"
             default:
                 cell.cameraModesLabel.text = "Camera"
         }
@@ -649,18 +651,7 @@ extension CameraViewController: UICollectionViewDataSource, UICollectionViewDele
                 captureButton.isHidden = false
                 
             }
-             
-            // add overlay run delegate method
-            // this one adds overlay afterwords
-            // https://developer.apple.com/documentation/vision/detecting_objects_in_still_images
-            // Running realtime numbers (adding realtime overlay)
-            // DetectingObjectsInStillImages (sample code for face, rect, barcode read)
-            
-            // need to add custom control here instead of CollectionView. Use collectionView for photo gallery.
-            //  horizontal scroll view containing multiple UILabel objects, each of which has an attached UITapGestureRecognizer.
-            //  https://www.raywenderlich.com/5294-how-to-make-a-custom-control-tutorial-a-reusable-knob
-            // check also Cocoa Controls for framework
-            
+     
         }
     }
 
