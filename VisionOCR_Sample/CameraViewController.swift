@@ -110,13 +110,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         switch  selectedFlashMode {
         case .on:
             selectedFlashMode = .off
-            sender.setImage(UIImage(systemName: "bolt.slash")!, for: UIControl.State.normal)
+            sender.setImage(UIImage(named: "bolt.slash"), for: UIControl.State.normal)
         case .off:
             selectedFlashMode = .auto
-            sender.setImage(UIImage(systemName: "bolt.badge.a")!, for: UIControl.State.normal)
+            sender.setImage(UIImage(named: "bolt.badge.a"), for: UIControl.State.normal)
         default:
             selectedFlashMode = .on
-            sender.setImage(UIImage(systemName: "bolt")!, for: UIControl.State.normal)
+            sender.setImage(UIImage(named: "bolt"), for: UIControl.State.normal)
         }
     }
     
@@ -292,13 +292,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         switch  chosenFlash {
         case .on:
-            image = UIImage(systemName: "bolt")!
+            image = UIImage(named: "bolt")!
             selectedFlashMode = .on
         case .off:
-            image = UIImage(systemName: "bolt.slash")!
+            image = UIImage(named: "bolt.slash")!
             selectedFlashMode = .off
         default:
-            image = UIImage(systemName: "bolt.badge.a")!
+            image = UIImage(named: "bolt.badge.a")!
             selectedFlashMode = .auto
         }
         flashButton.setImage(image, for: UIControl.State.normal)

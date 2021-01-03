@@ -14,7 +14,7 @@ class AllScans {
     
     private init() {
         
-        let image = UIImage(systemName: "doc.text.viewfinder")
+        let image = UIImage(named: "doc.text.below.ecg.fill")
         let sample1 = ScannedItem(headline: "Sample-1", content: "Sky is blue. Waves are coming...", image: image)
         let sample2 = ScannedItem(headline: "Sample-2", content: "Forest is green. Birds are singing...", image: image)
         

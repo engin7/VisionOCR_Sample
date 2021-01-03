@@ -80,6 +80,7 @@ class ResultsViewController: UIViewController {
 
 // MARK: - RecognizedTextDataSource
 
+@available(iOS 13.0, *)
 extension ResultsViewController: RecognizedTextDataSource {
     func addRecognizedText(recognizedText: [VNRecognizedTextObservation]) {
         // Create a full transcript to run analysis on.

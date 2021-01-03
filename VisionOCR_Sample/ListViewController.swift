@@ -8,12 +8,14 @@
 import UIKit
 import Vision
 
+@available(iOS 13.0, *)
 protocol RecognizedTextDataSource: AnyObject {
     func addRecognizedText(recognizedText: [VNRecognizedTextObservation])
 }
 
-
-
+@available(iOS 13.0, *)
+var textRecognitionRequest = VNRecognizeTextRequest()
+ 
 class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
    
     static let resultsContentsIdentifier = "resultsVC"
@@ -25,11 +27,10 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         present(picker, animated: true, completion: nil)
     }
     
-    var textRecognitionRequest = VNRecognizeTextRequest()
     let picker = UIImagePickerController()
     var resultsViewController: ResultsViewController?
     var scannedItems:[ScannedItem] = []
-    var lastFlashMode = UIImage(systemName: "bolt.badge.a")!
+    var lastFlashMode = UIImage(named:"bolt.badge.a")
     var cameraVC:CameraViewController?
     
     override func viewDidLoad() {
@@ -38,7 +39,17 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         picker.delegate = self
         picker.sourceType = .photoLibrary
         
-        
+        if #available(iOS 13.0, *) {
+            configureVNText()
+        } else {
+            // Fallback on earlier versions
+        }
+       
+    }
+  
+    @available(iOS 13.0, *)
+    func configureVNText() {
+
         textRecognitionRequest = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
         textRecognitionRequest.recognitionLevel = .accurate
         textRecognitionRequest.usesLanguageCorrection = true // default is EN
@@ -46,7 +57,6 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
 //        let customWords = ["on","off"]
 //        textRecognitionRequest.customWords = customWords
     }
-  
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataBase.count
@@ -87,6 +97,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     
     // MARK: - VNImageRequestHandler
+    @available(iOS 13.0, *)
     func processImage(image: UIImage?) {
         guard let cgImage = image?.cgImage else {
             print("Failed to get cgimage from input image")
@@ -102,6 +113,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
+    @available(iOS 13.0, *)
     func processImageFromCam(image: UIImage?) {
         guard let cgImage = image?.cgImage else {
             print("Failed to get cgimage from input image")
@@ -118,6 +130,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     
+    @available(iOS 13.0, *)
     func recognizeTextHandler(request: VNRequest, error: Error?) {
         guard let resultsViewController = self.resultsViewController else {
             print("resultsViewController is not set")
@@ -155,7 +168,7 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
 }
 // MARK: - Image from Library
 
-extension ListViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+ extension ListViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
      
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -170,7 +183,11 @@ extension ListViewController: UIImagePickerControllerDelegate & UINavigationCont
                 if let resultsVC = self.resultsViewController {
                     resultsVC.image = pickedImage
                 }
-                self.processImage(image: pickedImage)
+                if #available(iOS 13.0, *) {
+                    self.processImage(image: pickedImage)
+                } else {
+                    // Fallback on earlier versions
+                }
                 
                 DispatchQueue.main.async {
                     if let resultsVC = self.resultsViewController {
@@ -196,7 +213,11 @@ extension ListViewController: CameraViewControllerDelegate {
         if let resultsVC = self.resultsViewController {
             resultsVC.image = image
         }
-        self.processImageFromCam(image: image)
+        if #available(iOS 13.0, *) {
+            self.processImageFromCam(image: image)
+        } else {
+            // Fallback on earlier versions
+        }
         
         DispatchQueue.main.async {
             if let resultsVC = self.resultsViewController {
