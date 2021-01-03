@@ -150,7 +150,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="Vjc-6t-fp5" customClass="CameraCollectionViewCell" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="7.666666666666667" width="120" height="150"/>
+                                        <rect key="frame" x="0.0" y="8" width="120" height="150"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="120" height="150"/>
@@ -230,7 +230,7 @@
                                     <constraint firstAttribute="width" constant="64" id="rfl-L6-cej"/>
                                 </constraints>
                                 <state key="normal">
-                                    <imageReference key="image" image="arrow.triangle.2.circlepath.camera.fill" catalog="system" symbolScale="large"/>
+                                    <imageReference key="image" image="switchCamera" symbolScale="large"/>
                                 </state>
                                 <connections>
                                     <action selector="changeCameraButtonPressed:" destination="wKK-1L-4Vu" eventType="touchUpInside" id="duN-6e-AGv"/>
@@ -244,6 +244,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="fOG-qP-agM" secondAttribute="bottom" id="06H-ay-fxB"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="OgZ-Ua-Rj5" secondAttribute="bottom" constant="35" id="0m3-ev-IXe"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="40" id="2Qw-gE-Vc3"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="2y7-n1-wcg"/>
                             <constraint firstItem="fqm-7G-JaR" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="3sc-1P-9xz"/>
@@ -262,7 +263,6 @@
                             <constraint firstAttribute="bottom" secondItem="fqm-7G-JaR" secondAttribute="bottom" id="ZQa-cX-hWS"/>
                             <constraint firstAttribute="bottom" secondItem="0DI-8s-fNv" secondAttribute="bottom" id="avX-1v-rqb"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
-                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="OgZ-Ua-Rj5" secondAttribute="bottom" constant="35" id="eJa-JZ-ASC"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
                             <constraint firstAttribute="trailing" secondItem="fqm-7G-JaR" secondAttribute="trailing" id="j6a-CH-haA"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
@@ -437,12 +437,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="arrow.triangle.2.circlepath.camera.fill" catalog="system" width="128" height="94"/>
         <image name="bolt.badge.a" catalog="system" width="110" height="128"/>
         <image name="camera.fill" catalog="system" width="128" height="94"/>
         <image name="checkmark.rectangle.fill" catalog="system" width="128" height="93"/>
         <image name="doc.text" catalog="system" width="115" height="128"/>
         <image name="scanner.fill" catalog="system" width="128" height="93"/>
+        <image name="switchCamera" width="50.666667938232422" height="39.333332061767578"/>
         <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
