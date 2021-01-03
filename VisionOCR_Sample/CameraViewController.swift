@@ -335,9 +335,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     func drawBoundingBox(rect : CGRect) -> CGRect {
     
-        let ratioY = self.view.frame.height / videoPreviewLayer.frame.height
-
-        let transform = CGAffineTransform(scaleX: 1, y: -1  * ratioY).translatedBy(x: 0, y: -self.videoPreviewLayer.frame.height * 0.85)
+        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -self.videoPreviewLayer.frame.height)
         let scale = CGAffineTransform.identity.scaledBy(x: self.videoPreviewLayer.frame.width, y: self.videoPreviewLayer.frame.height)
 
         let bounds = rect.applying(scale).applying(transform)

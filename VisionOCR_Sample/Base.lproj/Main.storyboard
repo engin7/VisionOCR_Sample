@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MRo-Ho-zt1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MRo-Ho-zt1">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -116,23 +116,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xyH-wl-2w8">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqm-7G-JaR" customClass="DocumentView" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZHH-pq-4qU" customClass="BarcodeView" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fOG-qP-agM" customClass="PitchView" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dnR-rr-mPG" customClass="FaceView" customModule="VisionOCR_Sample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="571"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0DI-8s-fNv">
@@ -243,8 +243,7 @@
                         <viewLayoutGuide key="safeArea" id="bsz-di-FHK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="fOG-qP-agM" secondAttribute="bottom" id="06H-ay-fxB"/>
-                            <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" constant="50" id="0EL-OT-nSs"/>
+                            <constraint firstAttribute="bottom" secondItem="fOG-qP-agM" secondAttribute="bottom" id="06H-ay-fxB"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="zlx-f7-JU4" secondAttribute="bottom" constant="40" id="2Qw-gE-Vc3"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="2y7-n1-wcg"/>
                             <constraint firstItem="fqm-7G-JaR" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="3sc-1P-9xz"/>
@@ -252,7 +251,7 @@
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="nVM-GE-rdn" secondAttribute="trailing" constant="8" id="A0j-Pq-dFF"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="Dgu-ye-esd"/>
                             <constraint firstItem="ZHH-pq-4qU" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="G5H-lZ-aRn"/>
-                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="xyH-wl-2w8" secondAttribute="bottom" id="HDk-VZ-tym"/>
+                            <constraint firstAttribute="bottom" secondItem="xyH-wl-2w8" secondAttribute="bottom" id="HDk-VZ-tym"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="leading" secondItem="25A-y7-uar" secondAttribute="leading" id="PXr-6K-vp5"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="Q5q-Me-SfW"/>
                             <constraint firstItem="dnR-rr-mPG" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" id="QEr-lz-whx"/>
@@ -260,21 +259,22 @@
                             <constraint firstItem="gtq-Cq-Bwb" firstAttribute="centerX" secondItem="25A-y7-uar" secondAttribute="centerX" id="T8Y-gw-6hF"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="dnR-rr-mPG" secondAttribute="trailing" id="Vnd-fo-H86"/>
                             <constraint firstItem="xyH-wl-2w8" firstAttribute="trailing" secondItem="25A-y7-uar" secondAttribute="trailing" id="Vxo-XA-Kt3"/>
-                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="fqm-7G-JaR" secondAttribute="bottom" id="ZQa-cX-hWS"/>
+                            <constraint firstAttribute="bottom" secondItem="fqm-7G-JaR" secondAttribute="bottom" id="ZQa-cX-hWS"/>
                             <constraint firstAttribute="bottom" secondItem="0DI-8s-fNv" secondAttribute="bottom" id="avX-1v-rqb"/>
                             <constraint firstItem="OgZ-Ua-Rj5" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="20" id="ddp-uN-JZb"/>
+                            <constraint firstItem="bsz-di-FHK" firstAttribute="bottom" secondItem="OgZ-Ua-Rj5" secondAttribute="bottom" constant="35" id="eJa-JZ-ASC"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="fOG-qP-agM" secondAttribute="trailing" id="hXz-zf-zhH"/>
                             <constraint firstAttribute="trailing" secondItem="fqm-7G-JaR" secondAttribute="trailing" id="j6a-CH-haA"/>
                             <constraint firstItem="0DI-8s-fNv" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="kF4-Si-wpD"/>
                             <constraint firstItem="fqm-7G-JaR" firstAttribute="top" secondItem="25A-y7-uar" secondAttribute="top" id="kQs-CG-m2h"/>
-                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="ZHH-pq-4qU" secondAttribute="bottom" id="n35-II-6V8"/>
+                            <constraint firstAttribute="bottom" secondItem="ZHH-pq-4qU" secondAttribute="bottom" id="n35-II-6V8"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="ZHH-pq-4qU" secondAttribute="trailing" id="n6O-Ku-hPc"/>
                             <constraint firstItem="nVM-GE-rdn" firstAttribute="top" secondItem="bsz-di-FHK" secondAttribute="top" constant="8" id="ohX-pj-6v5"/>
                             <constraint firstItem="fOG-qP-agM" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="osc-QE-utc"/>
                             <constraint firstItem="ZHH-pq-4qU" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="qaF-Dk-8v2"/>
                             <constraint firstItem="gtq-Cq-Bwb" firstAttribute="centerY" secondItem="0DI-8s-fNv" secondAttribute="centerY" id="tRZ-65-jnf"/>
                             <constraint firstItem="0xM-6S-rFY" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" constant="8" id="u8z-Pe-EZq"/>
-                            <constraint firstItem="0DI-8s-fNv" firstAttribute="top" secondItem="dnR-rr-mPG" secondAttribute="bottom" id="uJd-UQ-XBs"/>
+                            <constraint firstAttribute="bottom" secondItem="dnR-rr-mPG" secondAttribute="bottom" id="uJd-UQ-XBs"/>
                             <constraint firstItem="dnR-rr-mPG" firstAttribute="leading" secondItem="bsz-di-FHK" secondAttribute="leading" id="weq-jM-sRJ"/>
                             <constraint firstItem="ICw-wP-oVj" firstAttribute="centerX" secondItem="25A-y7-uar" secondAttribute="centerX" id="x9T-0J-5j2"/>
                             <constraint firstItem="bsz-di-FHK" firstAttribute="trailing" secondItem="zlx-f7-JU4" secondAttribute="trailing" constant="20" id="ytE-M5-NO4"/>
