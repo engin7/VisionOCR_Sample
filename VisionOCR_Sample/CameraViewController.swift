@@ -368,7 +368,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
       let box = result.boundingBox
       faceView.boundingBox = convert(rect: box)
-
+    
       guard let landmarks = result.landmarks else {
         return
       }
@@ -446,7 +446,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       // get eyebrow locations
       var eyebrowOrigins: [CGPoint] = []
-      
+        var heights: [CGPoint] = []
+        
+        
       if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
         let origin = landmark(point: point, to: result.boundingBox)
         eyebrowOrigins.append(origin)
@@ -461,11 +463,19 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       // compare pupils location to eye brows
       
-      var focusY:  CGFloat = 0
-        let diff = (avgY - eyebrowAvgY) * (568 / UIScreen.main.bounds.height)
+      var focusY: CGFloat = 0
+        let diff = avgY - eyebrowAvgY
   
-      // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
-        
+        let faceHeight = result.boundingBox.height
+
+        // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
+       
+        // box will be big if face is close to camera
+        let ratio =  diff/faceHeight/2
+        print("XXXXX")
+        print(diff)
+        print(ratio)
+
       if (diff < CGFloat(22)) && (diff > CGFloat(17)) {
         focusY = avgY // straight look
       } else if (diff >= CGFloat(22)) {
