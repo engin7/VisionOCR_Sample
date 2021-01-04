@@ -431,7 +431,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       pitchView.clear()
       
       var origins: [CGPoint] = []
-      // laser origin based on left and right pupil
+      //  origin based on left and right pupil
       if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
         let origin = landmark(point: point, to: result.boundingBox)
         origins.append(origin)
@@ -446,9 +446,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       // get eyebrow locations
       var eyebrowOrigins: [CGPoint] = []
-        var heights: [CGPoint] = []
-        
-        
+  
       if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
         let origin = landmark(point: point, to: result.boundingBox)
         eyebrowOrigins.append(origin)
@@ -465,23 +463,23 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       var focusY: CGFloat = 0
         let diff = avgY - eyebrowAvgY
-  
+        // approximate face height inside the bounding box
         let faceHeight = result.boundingBox.height
 
         // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
        
         // box will be big if face is close to camera
-        let ratio =  diff/faceHeight/2
+        let ratio =  diff/faceHeight
         print("XXXXX")
         print(diff)
         print(ratio)
 
-      if (diff < CGFloat(22)) && (diff > CGFloat(17)) {
+      if (ratio < CGFloat(100)) && (ratio > CGFloat(60)) {
         focusY = avgY // straight look
-      } else if (diff >= CGFloat(22)) {
-        focusY = CGFloat(1500) // looking down
-      } else if (diff <= CGFloat(17)) {
-        focusY = CGFloat(-500) // looking up
+      } else if (ratio <= CGFloat(60)) {
+        focusY = CGFloat(1000) // looking down
+      } else if (ratio >= CGFloat(100)) {
+        focusY = CGFloat(-300) // looking up
       }
       
       // calculate the x coordinates of the pupils
@@ -722,7 +720,6 @@ func doPerspectiveCorrection(_ observation: VNRectangleObservation, from buffer:
     // FIXME: Fix coordinate system
     var ciImage: CIImage = CIImage(cvPixelBuffer: buffer)
     var output = UIImage()
-    
     
     let topLeft = observation.topLeft.scaled(to: ciImage.extent.size)
     let topRight = observation.topRight.scaled(to: ciImage.extent.size)
