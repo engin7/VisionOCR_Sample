@@ -430,61 +430,63 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
       
       pitchView.clear()
       
-      var origins: [CGPoint] = []
-      //  origin based on left and right pupil
-      if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
-        let origin = landmark(point: point, to: result.boundingBox)
-        origins.append(origin)
+        var origins: [CGPoint] = []
+        // laser origin based on left and right pupil
+        if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
+          let origin = landmark(point: point, to: result.boundingBox)
+          origins.append(origin)
+        }
+        if let point = result.landmarks?.rightPupil?.normalizedPoints.first {
+          let origin = landmark(point: point, to: result.boundingBox)
+          origins.append(origin)
+        }
+       
+        // Calculate the average y coordinate of the laser origins.
+        let avgY = origins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
+        
+        
+      // get eyebrow locations
+      var leftEyeBrow: [CGPoint] = []
+      var rightEyeBrow: [CGPoint] = []
+ 
+      if let points = result.landmarks?.leftEyebrow?.normalizedPoints {
+        leftEyeBrow = landmark(points: points, to: result.boundingBox)!
       }
-      if let point = result.landmarks?.rightPupil?.normalizedPoints.first {
-        let origin = landmark(point: point, to: result.boundingBox)
-        origins.append(origin)
+      if let points = result.landmarks?.rightEyebrow?.normalizedPoints {
+        rightEyeBrow = landmark(points: points, to: result.boundingBox)!
       }
      
-      // Calculate the average y coordinate of the laser origins.
-      let avgY = origins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
-      
-      // get eyebrow locations
-      var eyebrowOrigins: [CGPoint] = []
-  
-      if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
-        let origin = landmark(point: point, to: result.boundingBox)
-        eyebrowOrigins.append(origin)
-      }
-      if let point = result.landmarks?.rightEyebrow?.normalizedPoints.first {
-        let origin = landmark(point: point, to: result.boundingBox)
-        eyebrowOrigins.append(origin)
-      }
-      
-      // Calculate the average y coordinate of the laser origins.
-      let eyebrowAvgY = eyebrowOrigins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
-      
-      // compare pupils location to eye brows
-      
-      var focusY: CGFloat = 0
-        let diff = avgY - eyebrowAvgY
-        // approximate face height inside the bounding box
-        let faceHeight = result.boundingBox.height
+        // extension to create rect with min/max values
+        let leftBox = CGRect(points: leftEyeBrow)!
+        let rightBox = CGRect(points: rightEyeBrow)!
 
+        let leftRatio = leftBox.height / leftBox.width
+        let rightRatio = rightBox.height / rightBox.width
+ 
+       var focusY: CGFloat = 0
+       let diff = 100 * (leftRatio + rightRatio) / 2
+       
+ 
         // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
        
         // box will be big if face is close to camera
-        let ratio =  diff/faceHeight
+         // CHECK SLOPE DIRECTIONS ! NOT JUST HEIGHT/WIDTH
         print("XXXXX")
+        print(leftRatio)
+        print(rightRatio)
         print(diff)
-        print(ratio)
-
-      if (ratio < CGFloat(100)) && (ratio > CGFloat(60)) {
+        
+      if (diff < CGFloat(25)) && (diff > CGFloat(17)) {
         focusY = avgY // straight look
-      } else if (ratio <= CGFloat(60)) {
+      } else if (diff <= CGFloat(17)) {
         focusY = CGFloat(1000) // looking down
-      } else if (ratio >= CGFloat(100)) {
+      } else if (diff >= CGFloat(25)) {
         focusY = CGFloat(-300) // looking up
       }
       
-      // calculate the x coordinates of the pupils
+       // calculate the x coordinates of the pupils
       let avgX = origins.map { $0.x }.reduce(0.0, +) / CGFloat(origins.count)
-      let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
+       let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
       
       let focus = CGPoint(x: focusX, y: focusY)
       
@@ -752,3 +754,21 @@ extension CGPoint {
        }
     }
  
+extension CGRect {
+    init?(points: [CGPoint]) {
+        let xArray = points.map(\.x)
+        let yArray = points.map(\.y)
+        if  let minX = xArray.min(),
+            let maxX = xArray.max(),
+            let minY = yArray.min(),
+            let maxY = yArray.max() {
+
+            self.init(x: minX,
+                      y: minY,
+                      width: maxX - minX,
+                      height: maxY - minY)
+        } else {
+            return nil
+        }
+    }
+}
