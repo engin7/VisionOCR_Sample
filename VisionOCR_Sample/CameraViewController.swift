@@ -427,10 +427,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     //MARK: - LASER method for Tilt (up&down condition)
     
     func updatePitchView(for result: VNFaceObservation) {
-      
-      pitchView.clear()
-      
+        
+        pitchView.clear()
+        
         var origins: [CGPoint] = []
+        var nose: [CGPoint] = []
+        
         // laser origin based on left and right pupil
         if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
           let origin = landmark(point: point, to: result.boundingBox)
@@ -444,64 +446,68 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // Calculate the average y coordinate of the laser origins.
         let avgY = origins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
         
+        // get eyebrow locations
+        var eyebrowOrigins: [CGPoint] = []
+          
+        if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
+          let origin = landmark(point: point, to: result.boundingBox)
+          eyebrowOrigins.append(origin)
+        }
+        if let point = result.landmarks?.rightEyebrow?.normalizedPoints.first {
+          let origin = landmark(point: point, to: result.boundingBox)
+          eyebrowOrigins.append(origin)
+        }
         
-      // get eyebrow locations
-      var leftEyeBrow: [CGPoint] = []
-      var rightEyeBrow: [CGPoint] = []
- 
-      if let points = result.landmarks?.leftEyebrow?.normalizedPoints {
-        leftEyeBrow = landmark(points: points, to: result.boundingBox)!
-      }
-      if let points = result.landmarks?.rightEyebrow?.normalizedPoints {
-        rightEyeBrow = landmark(points: points, to: result.boundingBox)!
-      }
-     
-        // extension to create rect with min/max values
-        let leftBox = CGRect(points: leftEyeBrow)!
-        let rightBox = CGRect(points: rightEyeBrow)!
-
-        let leftRatio = leftBox.height / leftBox.width
-        let rightRatio = rightBox.height / rightBox.width
- 
-       var focusY: CGFloat = 0
-       let diff = 100 * (leftRatio + rightRatio) / 2
-       
- 
-        // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
-       
-        // box will be big if face is close to camera
-         // CHECK SLOPE DIRECTIONS ! NOT JUST HEIGHT/WIDTH
-        print("XXXXX")
-        print(leftRatio)
-        print(rightRatio)
-        print(diff)
+        if let points = result.landmarks?.nose?.normalizedPoints {
+             nose.append(contentsOf: points)
+        }
         
-      if (diff < CGFloat(25)) && (diff > CGFloat(17)) {
-        focusY = avgY // straight look
-      } else if (diff <= CGFloat(17)) {
-        focusY = CGFloat(1000) // looking down
-      } else if (diff >= CGFloat(25)) {
-        focusY = CGFloat(-300) // looking up
-      }
-      
-       // calculate the x coordinates of the pupils
-      let avgX = origins.map { $0.x }.reduce(0.0, +) / CGFloat(origins.count)
-       let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
-      
-      let focus = CGPoint(x: focusX, y: focusY)
-      
-      let originsCenter = CGPoint(x: avgX, y: avgY)
-      
-      let laser = Pitch(origin: originsCenter, focus: focus)
-      
-      pitchView.add(tilt: laser)
+        
+        
+        // Calculate the average y coordinate of the laser origins.
+        let eyebrowAvgY = eyebrowOrigins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
+        
+        // compare pupils location to eye brows
+        
+        var focusY: CGFloat = 0
+          let diff = avgY - eyebrowAvgY
     
-      // Tell the iPhone that the TiltView should be redrawn.
-      DispatchQueue.main.async {
-        self.pitchView.setNeedsDisplay()
-      }
+          let faceHeight = result.boundingBox.height
+
+          // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
+         
+          // box will be big if face is close to camera but
+          let ratio =  diff/faceHeight
+          print("XXXXX")
+          print(diff)
+          print(ratio)
+
+        if (ratio < CGFloat(22)) && (ratio > CGFloat(17)) {
+          focusY = avgY // straight look, no laser
+        } else if (ratio >= CGFloat(22)) {
+          focusY = CGFloat(1500) // looking down
+        } else if (ratio <= CGFloat(17)) {
+          focusY = CGFloat(-500) // looking up
+        }
+        
+        // calculate the x coordinates of the pupils
+        let avgX = origins.map { $0.x }.reduce(0.0, +) / CGFloat(origins.count)
+        let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
+        
+        let focus = CGPoint(x: focusX, y: focusY)
+        
+        let originsCenter = CGPoint(x: avgX, y: avgY)
+        
+        let laser = Pitch(origin: originsCenter, focus: focus)
+        
+        pitchView.add(tilt: laser)
       
-    }
+        // Tell the iPhone that the TiltView should be redrawn.
+        DispatchQueue.main.async {
+          self.pitchView.setNeedsDisplay()
+        }
+        
+      }
     
     func detectedFace(request: VNRequest, error: Error?) {
       // Extract the first result from the array of face observation results.
