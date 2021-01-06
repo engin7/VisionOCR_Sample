@@ -9,6 +9,7 @@ class FaceView: UIView {
   var leftEyebrow: [CGPoint] = []
   var rightEyebrow: [CGPoint] = []
   var nose: [CGPoint] = []
+  var noseCrest: [CGPoint] = []
   var outerLips: [CGPoint] = []
   var innerLips: [CGPoint] = []
   var faceContour: [CGPoint] = []
@@ -21,6 +22,7 @@ class FaceView: UIView {
     leftEyebrow = []
     rightEyebrow = []
     nose = []
+    noseCrest = []
     outerLips = []
     innerLips = []
     faceContour = []
@@ -87,7 +89,13 @@ class FaceView: UIView {
       context.addLines(between: nose)
       context.strokePath()
     }
-        
+    
+    if !noseCrest.isEmpty {
+      context.addLines(between: noseCrest)
+      context.strokePath()
+    }
+    
+    
     if !outerLips.isEmpty {
       context.addLines(between: outerLips)
       context.closePath()

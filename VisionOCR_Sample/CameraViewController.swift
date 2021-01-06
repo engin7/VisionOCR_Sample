@@ -41,7 +41,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private var documentRectangle: VNRectangleObservation?
     private var documentImage: UIImage?
     private var isTapped = false
-    
+    private var referenceNoseY: CGFloat?
+
     
     var maskLayer = CAShapeLayer()
     // Layer into which to draw bounding box paths.
@@ -403,7 +404,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         to: result.boundingBox) {
         faceView.nose = nose
       }
-          
+        
+        if let noseCrest = landmark(
+          points: landmarks.noseCrest?.normalizedPoints,
+          to: result.boundingBox) {
+          faceView.noseCrest = noseCrest
+        }
+        
+        
       if let outerLips = landmark(
         points: landmarks.outerLips?.normalizedPoints,
         to: result.boundingBox) {
@@ -429,74 +437,47 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     func updatePitchView(for result: VNFaceObservation) {
         
         pitchView.clear()
-        
-        var origins: [CGPoint] = []
-        var nose: [CGPoint] = []
-        
-        // laser origin based on left and right pupil
-        if let point = result.landmarks?.leftPupil?.normalizedPoints.first {
-          let origin = landmark(point: point, to: result.boundingBox)
-          origins.append(origin)
-        }
-        if let point = result.landmarks?.rightPupil?.normalizedPoints.first {
-          let origin = landmark(point: point, to: result.boundingBox)
-          origins.append(origin)
-        }
        
-        // Calculate the average y coordinate of the laser origins.
-        let avgY = origins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
-        
-        // get eyebrow locations
-        var eyebrowOrigins: [CGPoint] = []
-          
-        if let point = result.landmarks?.leftEyebrow?.normalizedPoints.first {
+        var noseY: CGFloat = 0
+        var noseX: CGFloat = 0
+
+        if let point = result.landmarks?.noseCrest?.normalizedPoints.first {
           let origin = landmark(point: point, to: result.boundingBox)
-          eyebrowOrigins.append(origin)
+            noseY = origin.y // get from y coordinate of the nose to detect pitch
+            noseX = origin.x
         }
-        if let point = result.landmarks?.rightEyebrow?.normalizedPoints.first {
-          let origin = landmark(point: point, to: result.boundingBox)
-          eyebrowOrigins.append(origin)
-        }
-        
-        if let points = result.landmarks?.nose?.normalizedPoints {
-             nose.append(contentsOf: points)
-        }
-        
-        
-        
-        // Calculate the average y coordinate of the laser origins.
-        let eyebrowAvgY = eyebrowOrigins.map { $0.y }.reduce(0.0, +) / CGFloat(origins.count)
         
         // compare pupils location to eye brows
         
-        var focusY: CGFloat = 0
-          let diff = avgY - eyebrowAvgY
-    
-          let faceHeight = result.boundingBox.height
-
-          // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
-         
-          // box will be big if face is close to camera but
-          let ratio =  diff/faceHeight
-          print("XXXXX")
-          print(diff)
-          print(ratio)
-
-        if (ratio < CGFloat(22)) && (ratio > CGFloat(17)) {
-          focusY = avgY // straight look, no laser
-        } else if (ratio >= CGFloat(22)) {
+          var focusY: CGFloat = 0
+          var diff: CGFloat = 0
+          
+            if referenceNoseY == nil {
+                referenceNoseY = noseY
+            } else {
+               diff = noseY - referenceNoseY!
+            }
+             
+        // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
+        
+        print("*****")
+        print(noseY)
+        print(referenceNoseY)
+        print(diff)
+        
+        if (diff > CGFloat(-20)) && (diff < CGFloat(80)) {
+          focusY = noseY // straight look
+        } else if (diff >= CGFloat(80)) {
           focusY = CGFloat(1500) // looking down
-        } else if (ratio <= CGFloat(17)) {
+        } else if (diff <= CGFloat(-20)) {
           focusY = CGFloat(-500) // looking up
         }
-        
-        // calculate the x coordinates of the pupils
-        let avgX = origins.map { $0.x }.reduce(0.0, +) / CGFloat(origins.count)
-        let focusX = avgX // we're only interested in tilt dirrection here so focus point is the middle of pupils
+    
+        let focusX = noseX // we're only interested in tilt dirrection here so focus point is the middle of pupils
         
         let focus = CGPoint(x: focusX, y: focusY)
         
-        let originsCenter = CGPoint(x: avgX, y: avgY)
+        let originsCenter = CGPoint(x: noseX, y: noseY)
         
         let laser = Pitch(origin: originsCenter, focus: focus)
         
