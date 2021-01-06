@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MRo-Ho-zt1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MRo-Ho-zt1">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -11,6 +11,59 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--SignatureVC-->
+        <scene sceneID="Fw5-6A-lXL">
+            <objects>
+                <viewController id="UPS-cG-XwM" customClass="SignatureVC" customModule="VisionOCR_Sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oyt-Vn-WsL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O1J-FO-pYc" userLabel="MainImageView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sG1-z7-Ibt">
+                                <rect key="frame" x="25" y="20" width="36" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Clear"/>
+                                <connections>
+                                    <action selector="clearPressed:" destination="UPS-cG-XwM" eventType="touchUpInside" id="3Sg-lh-89S"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5sC-Cu-0e0">
+                                <rect key="frame" x="351" y="20" width="40" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Share"/>
+                                <connections>
+                                    <action selector="sharePressed:" destination="UPS-cG-XwM" eventType="touchUpInside" id="seG-3e-O88"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A7c-Hd-tJQ" userLabel="TempImageView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="KWr-wg-eFW"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="A7c-Hd-tJQ" secondAttribute="trailing" id="PW8-SG-28o"/>
+                            <constraint firstAttribute="bottom" secondItem="A7c-Hd-tJQ" secondAttribute="bottom" id="Yha-4w-yrq"/>
+                            <constraint firstItem="O1J-FO-pYc" firstAttribute="top" secondItem="oyt-Vn-WsL" secondAttribute="top" id="f2H-uK-TFd"/>
+                            <constraint firstAttribute="trailing" secondItem="O1J-FO-pYc" secondAttribute="trailing" id="kbm-oM-FRs"/>
+                            <constraint firstItem="A7c-Hd-tJQ" firstAttribute="leading" secondItem="oyt-Vn-WsL" secondAttribute="leading" id="m4L-sw-5bA"/>
+                            <constraint firstItem="O1J-FO-pYc" firstAttribute="leading" secondItem="oyt-Vn-WsL" secondAttribute="leading" id="ucF-sU-kr7"/>
+                            <constraint firstAttribute="bottom" secondItem="O1J-FO-pYc" secondAttribute="bottom" id="w0O-Ci-o9t"/>
+                            <constraint firstItem="A7c-Hd-tJQ" firstAttribute="top" secondItem="oyt-Vn-WsL" secondAttribute="top" id="zQy-FL-lig"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mainImageView" destination="O1J-FO-pYc" id="7wY-kf-1U9"/>
+                        <outlet property="tempImageView" destination="A7c-Hd-tJQ" id="uY9-q0-PJA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TTb-qn-5Mm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1039" y="-573"/>
+        </scene>
         <!--Scanned Elements-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -87,11 +140,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Scanned Elements" id="hJC-jk-Bnb">
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="scanner.fill" catalog="system" id="wya-ud-k1X">
-                            <connections>
-                                <action selector="scanButtonPressed:" destination="BYZ-38-t0r" id="cJ6-ZK-rVm"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="Item" image="scanner.fill" catalog="system" id="wya-ud-k1X">
+                                <connections>
+                                    <action selector="scanButtonPressed:" destination="BYZ-38-t0r" id="cJ6-ZK-rVm"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" image="signature" catalog="system" id="xZU-7D-csy">
+                                <connections>
+                                    <segue destination="UPS-cG-XwM" kind="presentation" modalPresentationStyle="fullScreen" id="k4c-R4-lU3"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="camera.fill" catalog="system" id="vs6-Wh-fnp">
                             <connections>
                                 <segue destination="wKK-1L-4Vu" kind="presentation" identifier="cameraSegue" modalPresentationStyle="fullScreen" id="N0I-ri-gDy"/>
@@ -441,6 +501,7 @@
         <image name="checkmark.rectangle.fill" catalog="system" width="128" height="93"/>
         <image name="doc.text" catalog="system" width="115" height="128"/>
         <image name="scanner.fill" catalog="system" width="128" height="93"/>
+        <image name="signature" catalog="system" width="128" height="90"/>
         <image name="switchCamera" width="50.666667938232422" height="39.333332061767578"/>
         <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">

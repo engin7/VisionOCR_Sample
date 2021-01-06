@@ -11,6 +11,7 @@
 		28031AB0258B3CEE00CDF18C /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */; };
 		28031ABB258B816F00CDF18C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031ABA258B816F00CDF18C /* CameraViewController.swift */; };
 		28031ABE258B98E800CDF18C /* CameraCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28031ABD258B98E800CDF18C /* CameraCollectionViewCell.swift */; };
+		281A43B025A5F4A70056424B /* SignatureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281A43AF25A5F4A70056424B /* SignatureVC.swift */; };
 		2871EEFF2591F8C700E4B6E8 /* PitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2871EEFC2591F8C700E4B6E8 /* PitchView.swift */; };
 		2871EF012591F8C700E4B6E8 /* FaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2871EEFE2591F8C700E4B6E8 /* FaceView.swift */; };
 		2871EF092591FAFF00E4B6E8 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2871EF082591FAFF00E4B6E8 /* UIViewExtension.swift */; };
@@ -38,6 +39,7 @@
 		28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		28031ABA258B816F00CDF18C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		28031ABD258B98E800CDF18C /* CameraCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCollectionViewCell.swift; sourceTree = "<group>"; };
+		281A43AF25A5F4A70056424B /* SignatureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureVC.swift; sourceTree = "<group>"; };
 		2871EEFC2591F8C700E4B6E8 /* PitchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitchView.swift; sourceTree = "<group>"; };
 		2871EEFE2591F8C700E4B6E8 /* FaceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceView.swift; sourceTree = "<group>"; };
 		2871EF072591FAFF00E4B6E8 /* CoreGraphicsExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreGraphicsExtensions.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				28925E242589F97C00CCCB18 /* ResultsViewController.swift */,
 				28031AAF258B3CEE00CDF18C /* PreviewViewController.swift */,
 				28031AAC258B34E300CDF18C /* PDFCreator.swift */,
+				281A43AF25A5F4A70056424B /* SignatureVC.swift */,
 				28031ABD258B98E800CDF18C /* CameraCollectionViewCell.swift */,
 				28031ABA258B816F00CDF18C /* CameraViewController.swift */,
 				2871EEFE2591F8C700E4B6E8 /* FaceView.swift */,
@@ -212,6 +215,7 @@
 				28031ABE258B98E800CDF18C /* CameraCollectionViewCell.swift in Sources */,
 				28031AAD258B34E300CDF18C /* PDFCreator.swift in Sources */,
 				2882CD4E259B25ED0090B57A /* DocumentView.swift in Sources */,
+				281A43B025A5F4A70056424B /* SignatureVC.swift in Sources */,
 				28925E222589F68700CCCB18 /* ListCollectionViewCell.swift in Sources */,
 				2871EF0A2591FAFF00E4B6E8 /* CoreGraphicsExtensions.swift in Sources */,
 				2871EEFF2591F8C700E4B6E8 /* PitchView.swift in Sources */,

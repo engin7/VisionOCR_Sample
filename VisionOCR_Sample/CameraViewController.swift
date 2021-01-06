@@ -440,36 +440,45 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
        
         var noseY: CGFloat = 0
         var noseX: CGFloat = 0
-
+        var noseH: CGFloat = 0
+        
         if let point = result.landmarks?.noseCrest?.normalizedPoints.first {
-          let origin = landmark(point: point, to: result.boundingBox)
+
+            let origin = landmark(point: point, to: result.boundingBox)
             noseY = origin.y // get from y coordinate of the nose to detect pitch
             noseX = origin.x
         }
         
-        // compare pupils location to eye brows
-        
+        if let points = result.landmarks?.nose?.normalizedPoints {
+           
+          let yMin = points.map { $0.y }.min()!
+          let yMax = points.map { $0.y }.max()!
+            
+            noseH = (yMax - yMin) * 1000
+            
+        }
           var focusY: CGFloat = 0
           var diff: CGFloat = 0
           
-            if referenceNoseY == nil {
-                referenceNoseY = noseY
-            } else {
-               diff = noseY - referenceNoseY!
-            }
+        if referenceNoseY == nil {
+            referenceNoseY = noseY
+        } else {
+            diff = noseY - referenceNoseY!
+        }
              
         // FIXME - ADJUST FOR DIFFERENT PERSONS, screen distance, etc....
         
         print("*****")
         print(noseY)
+        print(noseH)
         print(referenceNoseY)
         print(diff)
         
-        if (diff > CGFloat(-20)) && (diff < CGFloat(80)) {
+        if (diff > CGFloat(-30)) && (diff < CGFloat(80)) {
           focusY = noseY // straight look
         } else if (diff >= CGFloat(80)) {
           focusY = CGFloat(1500) // looking down
-        } else if (diff <= CGFloat(-20)) {
+        } else if (diff <= CGFloat(-30)) {
           focusY = CGFloat(-500) // looking up
         }
     
